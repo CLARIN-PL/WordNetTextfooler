@@ -1,0 +1,50 @@
+schema: '2.0'
+stages:
+  download_dataset@enron_spam:
+    cmd: PYTHONPATH=. python experiments/scripts/download_dataset.py --dataset_name
+      enron_spam --output_dir data/datasets/enron_spam
+    deps:
+    - path: experiments/scripts/download_dataset.py
+      md5: dfcc61ca00234b3dbe0e9c04697ae40a
+      size: 1686
+    outs:
+    - path: data/datasets/enron_spam/
+      md5: b2115d2a6901cd29727f9ed294196544.dir
+      size: 53096069
+      nfiles: 3
+  get_model@enron_spam:
+    cmd: PYTHONPATH=. python experiments/scripts/get_model.py --dataset_name enron_spam
+      --output_dir data/models/enron_spam
+    deps:
+    - path: experiments/scripts/get_model.py
+      md5: 5050f51b4019bba97af47971f6c7cab4
+      size: 747
+    outs:
+    - path: data/models/enron_spam/
+      md5: 3e16b22f59532c66beeadea958e0579a.dir
+      size: 18505614
+      nfiles: 6
+  classify@enron_spam:
+    cmd: PYTHONPATH=. python experiments/scripts/classify.py --dataset_name enron_spam
+      --output_dir data/classification/enron_spam
+    deps:
+    - path: experiments/scripts/classify.py
+      md5: 5bd1363bd8cb2742e5d8391a0287cddb
+      size: 1281
+    outs:
+    - path: data/classification/enron_spam/
+      md5: a83267cc1b9d8e210412b725f93902c0.dir
+      size: 326
+      nfiles: 1
+  explain@enron_spam:
+    cmd: PYTHONPATH=. python experiments/scripts/explain.py --dataset_name enron_spam
+      --output_dir data/explanations/enron_spam
+    deps:
+    - path: experiments/scripts/explain.py
+      md5: c85cbb774f2682ee39948e701fa0b0ca
+      size: 1445
+    outs:
+    - path: data/explanations/enron_spam/
+      md5: 147226f0423c899e283cdbbcc223d8e0.dir
+      size: 6269580
+      nfiles: 1

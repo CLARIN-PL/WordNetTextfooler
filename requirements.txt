@@ -1,0 +1,9 @@
+datasets
+transformers
+click
+scikit-learn
+dvc[s3]
+shap
+
+--find-links https://download.pytorch.org/whl/torch_stable.html
+torch==1.12.0+cu116

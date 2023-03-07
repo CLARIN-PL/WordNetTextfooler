@@ -1,0 +1,53 @@
+stages:
+  download_dataset:
+    foreach:
+      - enron_spam
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/download_dataset.py
+        --dataset_name ${item}
+        --output_dir data/datasets/${item}
+      deps:
+        - experiments/scripts/download_dataset.py
+      outs:
+        - data/datasets/${item}/
+  get_model:
+    foreach:
+      - enron_spam
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/get_model.py
+        --dataset_name ${item}
+        --output_dir data/models/${item}
+      deps:
+        - experiments/scripts/get_model.py
+      outs:
+        - data/models/${item}/
+  classify:
+    foreach:
+      - enron_spam
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/classify.py
+        --dataset_name ${item}
+        --output_dir data/classification/${item}
+      deps:
+        - experiments/scripts/classify.py
+      outs:
+        - data/classification/${item}/
+  explain:
+    foreach:
+      - enron_spam
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/explain.py
+        --dataset_name ${item}
+        --output_dir data/explanations/${item}
+      deps:
+        - experiments/scripts/explain.py
+      outs:
+        - data/explanations/${item}/
