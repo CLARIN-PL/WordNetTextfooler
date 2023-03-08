@@ -1,0 +1,9 @@
+[core]
+    remote = minio
+[feature]
+    parametrization = true
+['remote "minio"']
+    url = s3://projects/adversarial-attacks/text-attacks/
+    profile = clarin
+    endpointurl = https://s3.clarin-pl.eu/
+
