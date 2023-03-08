@@ -23,6 +23,7 @@ stages:
         --output_dir data/models/${item}
       deps:
         - experiments/scripts/get_model.py
+        - data/datasets/${item}
       outs:
         - data/models/${item}/
   classify:
@@ -36,8 +37,10 @@ stages:
         --output_dir data/classification/${item}
       deps:
         - experiments/scripts/classify.py
+        - data/models/${item}/
+        - data/datasets/${item}/
       outs:
-        - data/classification/${item}/
+        - data/classification/${item}
   explain:
     foreach:
       - enron_spam
@@ -49,5 +52,7 @@ stages:
         --output_dir data/explanations/${item}
       deps:
         - experiments/scripts/explain.py
+        - data/models/${item}
+        - data/datasets/${item}
       outs:
         - data/explanations/${item}/
