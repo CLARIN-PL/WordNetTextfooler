@@ -2,6 +2,7 @@ stages:
   download_dataset:
     foreach:
       - enron_spam
+      - poleval
     do:
       wdir: .
       cmd: >-
