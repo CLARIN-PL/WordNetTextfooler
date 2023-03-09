@@ -28,7 +28,7 @@ def main(
     classify = get_classify_function(
         dataset_name=dataset_name,
     )
-    test = pd.read_json(f"data/datasets/{dataset_name}/test.jsonl", lines=True)
+    test = pd.read_json(f"data/preprocessed/{dataset_name}/test.jsonl", lines=True)
     test_x = test["text"].tolist()
     test_y = test["label"]
     pred_y = classify(test_x)

@@ -30,6 +30,7 @@ stages:
   get_model:
     foreach:
       - enron_spam
+      - poleval
     do:
       wdir: .
       cmd: >-
@@ -38,12 +39,13 @@ stages:
         --output_dir data/models/${item}
       deps:
         - experiments/scripts/get_model.py
-        - data/datasets/${item}
+        - data/preprocessed/${item}
       outs:
         - data/models/${item}/
   classify:
     foreach:
       - enron_spam
+      - poleval
     do:
       wdir: .
       cmd: >-
@@ -53,12 +55,13 @@ stages:
       deps:
         - experiments/scripts/classify.py
         - data/models/${item}/
-        - data/datasets/${item}/
+        - data/preprocessed/${item}/
       outs:
         - data/classification/${item}
   explain:
     foreach:
       - enron_spam
+      - poleval
     do:
       wdir: .
       cmd: >-
@@ -68,6 +71,6 @@ stages:
       deps:
         - experiments/scripts/explain.py
         - data/models/${item}
-        - data/datasets/${item}
+        - data/proprocessed/${item}
       outs:
         - data/explanations/${item}/
