@@ -13,6 +13,20 @@ stages:
         - experiments/scripts/download_dataset.py
       outs:
         - data/datasets/${item}/
+  preprocess_dataset:
+    foreach:
+      - enron_spam
+      - poleval
+    do:
+       wdir: .
+       cmd: >-
+         PYTHONPATH=. python experiments/scripts/tag_dataset.py
+         --dataset_name ${item}
+       deps:
+         - experiments/scripts/tag_dataset.py
+         - data/datasets/${item}/
+       outs:
+         - data/preprocessed/${item}/
   get_model:
     foreach:
       - enron_spam

@@ -153,3 +153,6 @@ dmypy.json
 cython_debug/
 
 .idea/
+
+# Lpmn config
+experiments/configs/config.yml
