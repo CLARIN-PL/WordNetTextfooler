@@ -16,9 +16,9 @@ stages:
     cmd: PYTHONPATH=. python experiments/scripts/get_model.py --dataset_name enron_spam
       --output_dir data/models/enron_spam
     deps:
-    - path: data/datasets/enron_spam
-      md5: 66d44efedf37990b1989c81bbee085e0.dir
-      size: 53096069
+    - path: data/preprocessed/enron_spam
+      md5: b75efba1a62182dc8ac32acd1faf92ed.dir
+      size: 61709260
       nfiles: 3
     - path: experiments/scripts/get_model.py
       md5: 5050f51b4019bba97af47971f6c7cab4
@@ -32,39 +32,81 @@ stages:
     cmd: PYTHONPATH=. python experiments/scripts/classify.py --dataset_name enron_spam
       --output_dir data/classification/enron_spam
     deps:
-    - path: data/datasets/enron_spam/
-      md5: 66d44efedf37990b1989c81bbee085e0.dir
-      size: 53096069
-      nfiles: 3
     - path: data/models/enron_spam/
       md5: 3e16b22f59532c66beeadea958e0579a.dir
       size: 18505614
       nfiles: 6
+    - path: data/preprocessed/enron_spam/
+      md5: b75efba1a62182dc8ac32acd1faf92ed.dir
+      size: 61709260
+      nfiles: 3
     - path: experiments/scripts/classify.py
-      md5: 50f55b90eb47cbf448d83f8392dd37b6
-      size: 1102
+      md5: ba9284c90847fbbd0f2a6cca414d9636
+      size: 1106
     outs:
     - path: data/classification/enron_spam
-      md5: c7d42825b98b289f6a5ed3be1af14413.dir
-      size: 2763843
+      md5: 0450c0b672bc4a5db3cc7be2dac786bd.dir
+      size: 10674882
       nfiles: 2
   explain@enron_spam:
     cmd: PYTHONPATH=. python experiments/scripts/explain.py --dataset_name enron_spam
       --output_dir data/explanations/enron_spam
     deps:
-    - path: data/datasets/enron_spam
-      md5: 66d44efedf37990b1989c81bbee085e0.dir
-      size: 53096069
-      nfiles: 3
     - path: data/models/enron_spam
       md5: 3e16b22f59532c66beeadea958e0579a.dir
       size: 18505614
       nfiles: 6
+    - path: data/preprocessed/enron_spam
+      md5: b75efba1a62182dc8ac32acd1faf92ed.dir
+      size: 61709260
+      nfiles: 3
     - path: experiments/scripts/explain.py
-      md5: c85cbb774f2682ee39948e701fa0b0ca
-      size: 1445
+      md5: 4e40a6415038ec6eb4140b54ff65c9c0
+      size: 1449
     outs:
     - path: data/explanations/enron_spam/
-      md5: 376bd1619c08b4989564788e74de8e06.dir
+      md5: 345282e7c4e774d55aba55ed56ec464f.dir
       size: 7870394
       nfiles: 1
+  download_dataset@poleval:
+    cmd: PYTHONPATH=. python experiments/scripts/download_dataset.py --dataset_name
+      poleval --output_dir data/datasets/poleval
+    deps:
+    - path: experiments/scripts/download_dataset.py
+      md5: 9eb915fd5b9216965db519f686408a51
+      size: 887
+    outs:
+    - path: data/datasets/poleval/
+      md5: 826f974f794e24efcb5aedb054d1fd55.dir
+      size: 1688836
+      nfiles: 3
+  preprocess_dataset@poleval:
+    cmd: PYTHONPATH=. python experiments/scripts/tag_dataset.py --dataset_name poleval
+    deps:
+    - path: data/datasets/poleval/
+      md5: 826f974f794e24efcb5aedb054d1fd55.dir
+      size: 1688836
+      nfiles: 3
+    - path: experiments/scripts/tag_dataset.py
+      md5: 2c4e097b3a278c12d19858f988232b44
+      size: 3435
+    outs:
+    - path: data/preprocessed/poleval/
+      md5: 854387459b193c5eba6db1273ca5ad23.dir
+      size: 2277282
+      nfiles: 3
+  preprocess_dataset@enron_spam:
+    cmd: PYTHONPATH=. python experiments/scripts/tag_dataset.py --dataset_name enron_spam
+    deps:
+    - path: data/datasets/enron_spam/
+      md5: 66d44efedf37990b1989c81bbee085e0.dir
+      size: 53096069
+      nfiles: 3
+    - path: experiments/scripts/tag_dataset.py
+      md5: 2c4e097b3a278c12d19858f988232b44
+      size: 3435
+    outs:
+    - path: data/preprocessed/enron_spam/
+      md5: b75efba1a62182dc8ac32acd1faf92ed.dir
+      size: 61709260
+      nfiles: 3

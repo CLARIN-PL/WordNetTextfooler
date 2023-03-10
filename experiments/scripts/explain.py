@@ -43,7 +43,7 @@ def main(
     model, tokenizer = get_model_and_tokenizer(
         dataset_name=dataset_name,
     )
-    test = pd.read_json(f"data/datasets/{dataset_name}/adversarial.jsonl", lines=True)
+    test = pd.read_json(f"data/preprocessed/{dataset_name}/adversarial.jsonl", lines=True)
     test_x = test["text"].tolist()
 
     predict = build_predict_fun(model, tokenizer)
