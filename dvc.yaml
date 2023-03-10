@@ -30,7 +30,7 @@ stages:
   get_model:
     foreach:
       - enron_spam
-      - poleval
+        # - poleval
     do:
       wdir: .
       cmd: >-
@@ -45,7 +45,7 @@ stages:
   classify:
     foreach:
       - enron_spam
-      - poleval
+        #- poleval
     do:
       wdir: .
       cmd: >-
@@ -61,7 +61,7 @@ stages:
   explain:
     foreach:
       - enron_spam
-      - poleval
+        #- poleval
     do:
       wdir: .
       cmd: >-
@@ -71,6 +71,6 @@ stages:
       deps:
         - experiments/scripts/explain.py
         - data/models/${item}
-        - data/proprocessed/${item}
+        - data/preprocessed/${item}
       outs:
         - data/explanations/${item}/

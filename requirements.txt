@@ -8,3 +8,7 @@ lpmn_client_biz
 
 --find-links https://download.pytorch.org/whl/torch_stable.html
 torch==1.12.0+cu116
+
+--index-url https://pypi.clarin-pl.eu/simple/
+plwn-api
+git+ssh://git@gitlab.clarin-pl.eu/adversarial-attacks/textfooling.git@develop

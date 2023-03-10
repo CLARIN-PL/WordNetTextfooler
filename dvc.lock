@@ -52,20 +52,20 @@ stages:
     cmd: PYTHONPATH=. python experiments/scripts/explain.py --dataset_name enron_spam
       --output_dir data/explanations/enron_spam
     deps:
-    - path: data/datasets/enron_spam
-      md5: 66d44efedf37990b1989c81bbee085e0.dir
-      size: 53096069
-      nfiles: 3
     - path: data/models/enron_spam
       md5: 3e16b22f59532c66beeadea958e0579a.dir
       size: 18505614
       nfiles: 6
+    - path: data/preprocessed/enron_spam
+      md5: b75efba1a62182dc8ac32acd1faf92ed.dir
+      size: 61709260
+      nfiles: 3
     - path: experiments/scripts/explain.py
-      md5: c85cbb774f2682ee39948e701fa0b0ca
-      size: 1445
+      md5: 4e40a6415038ec6eb4140b54ff65c9c0
+      size: 1449
     outs:
     - path: data/explanations/enron_spam/
-      md5: 376bd1619c08b4989564788e74de8e06.dir
+      md5: 345282e7c4e774d55aba55ed56ec464f.dir
       size: 7870394
       nfiles: 1
   download_dataset@poleval:
