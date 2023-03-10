@@ -74,7 +74,12 @@ def process_file(dataset_df, lang, output_path):
 )
 def main(dataset_name: str):
     """Downloads the dataset to the output directory."""
-    lang = 'en' if dataset_name == 'enron_spam' else 'pl'
+    lang = {
+        "enron_spam": "en",
+        "poleval": "pl",
+        "20_news": "en",
+        "wiki_pl": "pl",
+    }[dataset_name]
     output_dir = f"data/preprocessed/{dataset_name}"
     os.makedirs(output_dir, exist_ok=True)
 
