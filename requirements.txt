@@ -2,8 +2,8 @@ datasets
 transformers
 click
 scikit-learn
-dvc[s3]
-shap
+dvc[s3]==2.46.0
+shap==0.41.0
 lpmn_client_biz
 
 --find-links https://download.pytorch.org/whl/torch_stable.html

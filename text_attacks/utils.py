@@ -11,13 +11,13 @@ def get_model_and_tokenizer(dataset_name):
     return fun()
 
 
-def get_classify_function(dataset_name):
+def get_classify_function(dataset_name, device="cpu"):
     """Return get_model_and_tokenizer for a specific dataset."""
     fun = getattr(
         importlib.import_module(f"text_attacks.models.{dataset_name}"),
         "get_classify_function",
     )
-    return fun()
+    return fun(device=device)
 
 
 def download_dataset(dataset_name):
