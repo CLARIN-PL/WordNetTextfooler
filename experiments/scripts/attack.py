@@ -1,22 +1,40 @@
 """Script for running attacks on datasets."""
 import click
 import pandas as pd
-import json
 import os
 from tqdm import tqdm
 from multiprocessing import cpu_count, Pool
 from text_attacks.utils import get_classify_function
-from textfooler import Attack, TextFooler
+from textfooler import Attack, TextFooler, BaseLine, process
 
 
 TEXT = 'text'
 LEMMAS = 'lemmas'
 TAGS = 'tags'
 
+ATTACK_SUMMARY = "attacks_summary"
+ATTACK_SUCCEEDED = "attacks_succeeded"
+SIMILARITY = "similarity"
+CHANGED = "changed"
+CHANGED_WORDS = "changed_words"
+SUCCEEDED = "succeeded"
+ALL = "all"
+DIFF = "diff"
+EXPECTED = "expected"
+ACTUAL = "actual"
+COSINE_SCORE = "cosine_score"
+CLASS = "class"
 
-def spoil_sentence(sentence, lemmas, tags, lang, classify_fun, similarity):
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+DEFAULT_RES = {"spoiled": {"attacks_summary": {"succeeded": 0, "all": 1}, "attacks_succeeded": []}}
+
+
+
+def spoil_sentence(sentence, lemmas, tags, lang, similarity, max_sub):
     attack = TextFooler(lang)
-    return attack.process(sentence, lemmas, tags, classify_fun, similarity)
+    # attack = BaseLine(lang, 0.5, 0.4, 0.3)
+    return attack.spoil(sentence, [], lemmas, tags, similarity, max_sub)
 
 
 @click.command()
@@ -33,23 +51,62 @@ def main(dataset_name: str):
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, 'test.jsonl')
     classify = get_classify_function(
-        dataset_name=dataset_name,
+        dataset_name=dataset_name
     )
     dataset_df = pd.read_json(input_file, lines=True)
-    spoiled = []
-    similarity = 0.95
+    # dataset_df = dataset_df[:10]
+
+    spoiled, results = [], []
+    similarity, max_sub = 0.95, 1
     cpus = cpu_count()
-    with Pool(processes=cpus) as pool:
-        results = []
-        for idx in tqdm(range(0, len(dataset_df), cpus)):
-            end = min(idx+cpus, len(dataset_df) + 1)
-            for sentence, lemmas, tags in dataset_df[[TEXT, LEMMAS, TAGS], idx:end]:
-                results.append(pool.apply_async(spoil_sentence, args=[sentence, lemmas,
-                                                                      tags, lang, classify, similarity]))
-            for res in results:
-                spoiled_sent = res.get()
-                spoiled.append(spoiled_sent)
-            results = []
+    classes = classify(dataset_df[TEXT].tolist())
+    # used_id = 0
+    # sent_nbr = len(dataset_df[TEXT])
+    # with Pool(processes=cpus) as pool:
+    #     for idx in range(0, min(cpus, sent_nbr)):
+    #         sentence, lemmas, tags = dataset_df[TEXT][idx], \
+    #                                  dataset_df[LEMMAS][idx], \
+    #                                  dataset_df[TAGS][idx]
+    #
+    #         results.append(pool.apply_async(spoil_sentence, args=[sentence,
+    #                                                               lemmas,
+    #                                                               tags,
+    #                                                               lang,
+    #                                                               similarity,
+    #                                                               max_sub]))
+    #         used_id = idx
+    #     count = len(results)
+    #     while count and used_id < sent_nbr:
+    #         ready = 0
+    #         to_rm = []
+    #         for r in results:
+    #             if r.ready():
+    #                 ready += 1
+    #                 changed_sent = r.get()
+    #                 if changed_sent:
+    #                     spoiled.append(process(changed_sent, classes[i], classify))
+    #                 to_rm.append(r)
+    #         count = len(results) - ready
+    #         results = [res for res in results if res not in to_rm]
+    #         h_bound = min(used_id + cpus - len(results), sent_nbr)
+    #         for i in range(used_id + 1, h_bound):
+    #             used_id += 1
+    #             sentence, lemmas, tags = dataset_df[TEXT][idx], \
+    #                                      dataset_df[LEMMAS][idx], \
+    #                                      dataset_df[TAGS][idx]
+    #
+    #             results.append(pool.apply_async(spoil_sentence, args=[sentence,
+    #                                                                   lemmas,
+    #                                                                   tags,
+    #                                                                   lang,
+    #                                                                   similarity,
+    #                                                                   max_sub]))
+
+    for i, cols in tqdm(dataset_df[[TEXT, LEMMAS, TAGS]].iterrows(), total=len(dataset_df)):
+        sentence, lemmas, tags = cols[0], cols[1], cols[2]
+        changed_sent = spoil_sentence(sentence, lemmas, tags, lang, similarity, max_sub)
+        if changed_sent:
+            spoiled.append(process(changed_sent, classes[i], classify))
 
     with open(output_path, mode="wt") as fd:
         fd.write(pd.DataFrame(

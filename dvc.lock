@@ -180,3 +180,22 @@ stages:
       md5: 6831f104f7c20541548fe72250c45706.dir
       size: 31286120
       nfiles: 2
+  attack@enron_spam:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name enron_spam
+    deps:
+    - path: data/models/enron_spam
+      md5: 3e16b22f59532c66beeadea958e0579a.dir
+      size: 18505614
+      nfiles: 6
+    - path: data/preprocessed/enron_spam
+      md5: b75efba1a62182dc8ac32acd1faf92ed.dir
+      size: 61709260
+      nfiles: 3
+    - path: experiments/scripts/attack.py
+      md5: 80f4725e81f070494d926c4916bd9cf4
+      size: 3352
+    outs:
+    - path: data/results/enron_spam/
+      md5: fc35de09ce5e2aa7043325b2819c0aa0.dir
+      size: 4869
+      nfiles: 1

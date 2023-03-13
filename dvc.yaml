@@ -75,3 +75,18 @@ stages:
         - data/preprocessed/${item}
       outs:
         - data/explanations/${item}/
+  attack:
+    foreach:
+      - enron_spam
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item}
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/preprocessed/${item}
+      outs:
+        - data/results/${item}/
+
