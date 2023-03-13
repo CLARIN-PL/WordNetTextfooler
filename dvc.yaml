@@ -17,6 +17,8 @@ stages:
     foreach:
       - enron_spam
       - poleval
+      - 20_news
+      - wiki_pl
     do:
        wdir: .
        cmd: >-
@@ -30,7 +32,6 @@ stages:
   get_model:
     foreach:
       - enron_spam
-        # - poleval
     do:
       wdir: .
       cmd: >-
@@ -45,7 +46,8 @@ stages:
   classify:
     foreach:
       - enron_spam
-        #- poleval
+      - 20_news
+      - wiki_pl
     do:
       wdir: .
       cmd: >-
@@ -61,7 +63,6 @@ stages:
   explain:
     foreach:
       - enron_spam
-        #- poleval
     do:
       wdir: .
       cmd: >-

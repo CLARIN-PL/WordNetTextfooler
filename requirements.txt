@@ -4,11 +4,14 @@ click
 scikit-learn
 dvc[s3]
 shap
-lpmn_client_biz
+tqdm
+transformers
+tokenizers
+sentence-transformers
 
 --find-links https://download.pytorch.org/whl/torch_stable.html
 torch==1.12.0+cu116
 
 --index-url https://pypi.clarin-pl.eu/simple/
 plwn-api
-git+ssh://git@gitlab.clarin-pl.eu/adversarial-attacks/textfooling.git@develop
+lpmn_client_biz

@@ -3,6 +3,7 @@ from pathlib import Path
 
 import click
 import pandas as pd
+import torch
 from sklearn.metrics import classification_report
 
 from text_attacks.utils import get_classify_function
@@ -27,6 +28,7 @@ def main(
     output_dir.mkdir(parents=True, exist_ok=True)
     classify = get_classify_function(
         dataset_name=dataset_name,
+        device="cuda" if torch.cuda.is_available() else "cpu"
     )
     test = pd.read_json(f"data/preprocessed/{dataset_name}/test.jsonl", lines=True)
     test_x = test["text"].tolist()

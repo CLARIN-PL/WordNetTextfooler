@@ -1,0 +1,5 @@
+outs:
+- md5: 999207f1c2c123c9943397b47f2c3b3a.dir
+  size: 23460358
+  nfiles: 3
+  path: 20_news

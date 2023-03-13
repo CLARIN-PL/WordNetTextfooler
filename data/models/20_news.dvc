@@ -1,0 +1,5 @@
+outs:
+- md5: 43d68a67ecb8149bd6bf50db9767cb64.dir
+  size: 439008808
+  nfiles: 6
+  path: 20_news
