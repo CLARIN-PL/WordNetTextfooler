@@ -88,12 +88,12 @@ stages:
       size: 1688836
       nfiles: 3
     - path: experiments/scripts/tag_dataset.py
-      md5: 8e8039b73b8ea3ce39287ed0a304af9b
-      size: 3750
+      md5: f73e2203fdb988a00d4e8363a349c617
+      size: 3932
     outs:
     - path: data/preprocessed/poleval/
-      md5: 854387459b193c5eba6db1273ca5ad23.dir
-      size: 2277282
+      md5: 9d067db65ba6a27db19effce45b01876.dir
+      size: 2541105
       nfiles: 3
   preprocess_dataset@enron_spam:
     cmd: PYTHONPATH=. python experiments/scripts/tag_dataset.py --dataset_name enron_spam
@@ -103,12 +103,12 @@ stages:
       size: 53096069
       nfiles: 3
     - path: experiments/scripts/tag_dataset.py
-      md5: 8e8039b73b8ea3ce39287ed0a304af9b
-      size: 3750
+      md5: f73e2203fdb988a00d4e8363a349c617
+      size: 3932
     outs:
     - path: data/preprocessed/enron_spam/
-      md5: b75efba1a62182dc8ac32acd1faf92ed.dir
-      size: 61709260
+      md5: 30c63efbc615347ddcb5f61e011113bd.dir
+      size: 65971374
       nfiles: 3
   preprocess_dataset@wiki_pl:
     cmd: PYTHONPATH=. python experiments/scripts/tag_dataset.py --dataset_name wiki_pl
@@ -118,12 +118,12 @@ stages:
       size: 29115538
       nfiles: 3
     - path: experiments/scripts/tag_dataset.py
-      md5: 8e8039b73b8ea3ce39287ed0a304af9b
-      size: 3750
+      md5: f73e2203fdb988a00d4e8363a349c617
+      size: 3932
     outs:
     - path: data/preprocessed/wiki_pl/
-      md5: 3e9b2e1e0542777e0a751d9d7f7f4241.dir
-      size: 55380570
+      md5: 0014b9bb52913cbc9a568d237ea2207b.dir
+      size: 65553079
       nfiles: 3
   classify@wiki_pl:
     cmd: PYTHONPATH=. python experiments/scripts/classify.py --dataset_name wiki_pl
@@ -153,12 +153,12 @@ stages:
       size: 23460358
       nfiles: 3
     - path: experiments/scripts/tag_dataset.py
-      md5: 8e8039b73b8ea3ce39287ed0a304af9b
-      size: 3750
+      md5: f73e2203fdb988a00d4e8363a349c617
+      size: 3932
     outs:
     - path: data/preprocessed/20_news/
-      md5: 1ed5ef2dabe4bc05f7377175ed11137b.dir
-      size: 46845669
+      md5: 20da0980e52df537e5b7ca5db0305879.dir
+      size: 58582060
       nfiles: 3
   classify@20_news:
     cmd: PYTHONPATH=. python experiments/scripts/classify.py --dataset_name 20_news

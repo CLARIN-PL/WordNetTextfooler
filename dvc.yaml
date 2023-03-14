@@ -80,8 +80,8 @@ stages:
   attack_basic:
     foreach:
       - enron_spam
-        #- 20_news
-        #- wiki_pl
+      - 20_news
+      - wiki_pl
     do:
       wdir: .
       cmd: >-
