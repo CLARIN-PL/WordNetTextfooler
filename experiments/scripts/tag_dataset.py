@@ -107,7 +107,7 @@ def main(dataset_name: str):
                 test_with_tags = pd.DataFrame(
                     pd.read_json(os.path.join(input_dir, file), lines=True)
                 )
-                empty_list = [[] for _ in range(len(test_with_tags)]]
+                empty_list = [[] for _ in range(len(test_with_tags))]
                 test_with_tags[LEMMAS] = empty_list
                 test_with_tags[TAGS] = empty_list
                 test_with_tags[ORTHS] = empty_list
