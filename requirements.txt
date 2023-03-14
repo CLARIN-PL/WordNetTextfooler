@@ -1,17 +1,19 @@
-datasets
-transformers
-click
-scikit-learn
-dvc[s3]
-shap
-tqdm
-transformers
-tokenizers
-sentence-transformers
+datasets>=2.10.1
+transformers==4.26.1
+click>=8.1.3
+scikit-learn==1.2.2
+dvc[s3]==2.47.0
+shap==0.41.0
+tqdm>=4.65.0
+tokenizers==0.13.2
+sentence-transformers==2.2.2
+jupyter
+matplotlib
 
 --find-links https://download.pytorch.org/whl/torch_stable.html
 torch==1.12.0+cu116
 
 --index-url https://pypi.clarin-pl.eu/simple/
-plwn-api
-lpmn_client_biz
+plwn-api==0.24
+lpmn_client_biz>=2.1.1
+

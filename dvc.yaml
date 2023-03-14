@@ -63,6 +63,8 @@ stages:
   explain:
     foreach:
       - enron_spam
+      - 20_news
+      - wiki_pl
     do:
       wdir: .
       cmd: >-
@@ -75,9 +77,11 @@ stages:
         - data/preprocessed/${item}
       outs:
         - data/explanations/${item}/
-  attack:
+  attack_basic:
     foreach:
       - enron_spam
+        #- 20_news
+        #- wiki_pl
     do:
       wdir: .
       cmd: >-
@@ -88,5 +92,5 @@ stages:
         - data/models/${item}
         - data/preprocessed/${item}
       outs:
-        - data/results/${item}/
+        - data/results/attack_basic/${item}/
 

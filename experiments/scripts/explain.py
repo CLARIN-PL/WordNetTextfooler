@@ -1,8 +1,10 @@
 """XAI results."""
+import os
 import pickle
 from pathlib import Path
 
 import click
+import numpy as np
 import pandas as pd
 import shap
 import torch
@@ -11,15 +13,45 @@ from text_attacks.utils import get_model_and_tokenizer
 
 
 def build_predict_fun(model, tokenizer):
+    device="cuda" if torch.cuda.is_available() else "cpu"
+    model.eval()
+    model = model.to(device)
+
     def f(x):
         encoded_inputs = torch.tensor(
             [tokenizer.encode(
-                v, padding='max_length', max_length=512, truncation=True
+                v, padding="max_length", max_length=512, truncation=True
             ) for v in x])
-        logits = model(encoded_inputs).logits
+        encoded_inputs = encoded_inputs.to(device)
+        with torch.no_grad():
+            logits = model(encoded_inputs).logits.cpu()
         return logits
-
     return f
+
+
+def get_importance(shap_values):
+    cohorts = {"": shap_values}
+    cohort_labels = list(cohorts.keys())
+    cohort_exps = list(cohorts.values())
+    for i in range(len(cohort_exps)):
+        if len(cohort_exps[i].shape) == 2:
+            cohort_exps[i] = cohort_exps[i].abs.mean(0)
+    features = cohort_exps[0].data
+    feature_names = cohort_exps[0].feature_names
+    values = np.array(
+        [cohort_exps[i].values for i in range(len(cohort_exps))],
+        dtype=object,
+    )
+    feature_importance = pd.DataFrame(
+        list(
+            zip(feature_names, sum(values))
+        ),
+        columns=['features', 'importance']
+    )
+    feature_importance.sort_values(
+        by=['importance'], ascending=False, inplace=True, key=lambda x: abs(x)
+    )
+    return feature_importance
 
 
 @click.command()
@@ -43,7 +75,9 @@ def main(
     model, tokenizer = get_model_and_tokenizer(
         dataset_name=dataset_name,
     )
-    test = pd.read_json(f"data/preprocessed/{dataset_name}/adversarial.jsonl", lines=True)
+    test = pd.read_json(
+        f"data/preprocessed/{dataset_name}/adversarial.jsonl", lines=True
+    )
     test_x = test["text"].tolist()
 
     predict = build_predict_fun(model, tokenizer)
@@ -55,6 +89,24 @@ def main(
     shap_values = explainer(test_x)
     with open(output_dir / "shap_values.pickle", mode="wb") as fd:
         pickle.dump(shap_values, fd)
+
+    # GLOBAL IMPORTANCE:
+    os.makedirs(output_dir / "global", exist_ok=True)
+    for class_id, class_name in model.config.id2label.items():
+        importance_df = get_importance(shap_values[:, :, class_id].mean(0))
+        importance_df.to_json(
+            output_dir / "global" / f"{class_name}__importance.json",
+        )
+
+    # LOCAL IMPORTANCE
+    for class_id, class_name in model.config.id2label.items():
+        sub_dir = output_dir / "local" / class_name
+        os.makedirs(sub_dir, exist_ok=True)
+        for shap_id, text_id in enumerate(test["id"]):
+            importance_df = get_importance(shap_values[shap_id, :, class_id])
+            importance_df.to_json(
+                sub_dir / f"{text_id}__importance.json",
+            )
 
 
 if __name__ == "__main__":
