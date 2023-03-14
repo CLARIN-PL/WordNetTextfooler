@@ -3,7 +3,6 @@ import click
 import pandas as pd
 import os
 from tqdm import tqdm
-from multiprocessing import cpu_count, Pool
 from text_attacks.utils import get_classify_function
 from textfooler import Attack, TextFooler, BaseLine, process
 
@@ -11,6 +10,7 @@ from textfooler import Attack, TextFooler, BaseLine, process
 TEXT = "text"
 LEMMAS = "lemmas"
 TAGS = "tags"
+ORTHS = "orths"
 
 ATTACK_SUMMARY = "attacks_summary"
 ATTACK_SUCCEEDED = "attacks_succeeded"
@@ -35,12 +35,6 @@ DEFAULT_RES = {
 }
 
 
-def spoil_sentence(sentence, lemmas, tags, lang, similarity, max_sub):
-    attack = TextFooler(lang)
-    # attack = BaseLine(lang, 0.5, 0.4, 0.3)
-    return attack.spoil(sentence, [], lemmas, tags, similarity, max_sub)
-
-
 @click.command()
 @click.option(
     "--dataset_name",
@@ -61,62 +55,17 @@ def main(dataset_name: str):
     output_path = os.path.join(output_dir, "test.jsonl")
     classify = get_classify_function(dataset_name=dataset_name)
     dataset_df = pd.read_json(input_file, lines=True)
-    # dataset_df = dataset_df[:10]
 
     spoiled, results = [], []
     similarity, max_sub = 0.95, 1
-    cpus = cpu_count()
     classes = classify(dataset_df[TEXT].tolist())
-    # used_id = 0
-    # sent_nbr = len(dataset_df[TEXT])
-    # with Pool(processes=cpus) as pool:
-    #     for idx in range(0, min(cpus, sent_nbr)):
-    #         sentence, lemmas, tags = dataset_df[TEXT][idx], \
-    #                                  dataset_df[LEMMAS][idx], \
-    #                                  dataset_df[TAGS][idx]
-    #
-    lang = "en" if dataset_name == "enron_spam" else "pl"
-    #         results.append(pool.apply_async(spoil_sentence, args=[sentence,
-    #                                                               lemmas,
-    #                                                               tags,
-    #                                                               lang,
-    #                                                               similarity,
-    #                                                               max_sub]))
-    #         used_id = idx
-    #     count = len(results)
-    #     while count and used_id < sent_nbr:
-    #         ready = 0
-    #         to_rm = []
-    #         for r in results:
-    #             if r.ready():
-    #                 ready += 1
-    #                 changed_sent = r.get()
-    #                 if changed_sent:
-    #                     spoiled.append(process(changed_sent, classes[i], classify))
-    #                 to_rm.append(r)
-    #         count = len(results) - ready
-    #         results = [res for res in results if res not in to_rm]
-    #         h_bound = min(used_id + cpus - len(results), sent_nbr)
-    #         for i in range(used_id + 1, h_bound):
-    #             used_id += 1
-    #             sentence, lemmas, tags = dataset_df[TEXT][idx], \
-    #                                      dataset_df[LEMMAS][idx], \
-    #                                      dataset_df[TAGS][idx]
-    #
-    #             results.append(pool.apply_async(spoil_sentence, args=[sentence,
-    #                                                                   lemmas,
-    #                                                                   tags,
-    #                                                                   lang,
-    #                                                                   similarity,
-    #                                                                   max_sub]))
+    attack = TextFooler(lang)
 
     for i, cols in tqdm(
-        dataset_df[[TEXT, LEMMAS, TAGS]].iterrows(), total=len(dataset_df)
+        dataset_df[[TEXT, LEMMAS, TAGS, ORTHS]].iterrows(), total=len(dataset_df)
     ):
-        sentence, lemmas, tags = cols[0], cols[1], cols[2]
-        changed_sent = spoil_sentence(
-            sentence, lemmas, tags, lang, similarity, max_sub
-        )
+        sentence, lemmas, tags, orths = cols[0], cols[1], cols[2], cols[3]
+        changed_sent = attack.spoil(sentence, [], lemmas, tags, orths, similarity, max_sub)
         if changed_sent:
             spoiled.append(process(changed_sent, classes[i], classify))
 

@@ -15,6 +15,7 @@ MSTAG = "mstag"
 TEXT = "text"
 LEMMAS = "lemmas"
 TAGS = "tags"
+ORTHS = "orths"
 
 
 def tag_sentence(sentence: str, lang: str):
@@ -41,17 +42,18 @@ def tag_sentence(sentence: str, lang: str):
             for line in lines:
                 tokens.extend(line[TOKENS])
         os.remove(downloaded)
-    lemmas, tags = [], []
+    lemmas, tags, orths = [], [], []
     for token in tokens:
-        lexeme = token["lexemes"][0]
-        lemmas.append(lexeme["lemma"])
-        tags.append(lexeme["mstag"])
-    return lemmas, tags
+        lexeme = token[LEXEMES][0]
+        lemmas.append(lexeme[LEMMA])
+        tags.append(lexeme[MSTAG])
+        orths.append(token[ORTH])
+    return lemmas, tags, orths
 
 
 def process_file(dataset_df, lang, output_path):
     test_with_tags = pd.DataFrame(dataset_df)
-    lemmas_col, tags_col = [], []
+    lemmas_col, tags_col, orth_col = [], [], []
     cpus = 8
     with Pool(processes=cpus) as pool:
         results = []
@@ -62,12 +64,14 @@ def process_file(dataset_df, lang, output_path):
                     pool.apply_async(tag_sentence, args=[sentence, lang])
                 )
             for res in results:
-                lemmas, tags = res.get()
+                lemmas, tags, orths = res.get()
                 lemmas_col.append(lemmas)
                 tags_col.append(tags)
+                orth_col.append(orths)
             results = []
     test_with_tags[LEMMAS] = lemmas_col
     test_with_tags[TAGS] = tags_col
+    test_with_tags[ORTHS] = orth_col
 
     with open(output_path, mode="wt") as fd:
         fd.write(test_with_tags.to_json(orient="records", lines=True))
@@ -103,10 +107,10 @@ def main(dataset_name: str):
                 test_with_tags = pd.DataFrame(
                     pd.read_json(os.path.join(input_dir, file), lines=True)
                 )
-                test_with_tags[LEMMAS] = [
-                    "" for _ in range(len(test_with_tags))
-                ]
-                test_with_tags[TAGS] = ["" for _ in range(len(test_with_tags))]
+                empty_list = [[] for _ in range(len(test_with_tags)]]
+                test_with_tags[LEMMAS] = empty_list
+                test_with_tags[TAGS] = empty_list
+                test_with_tags[ORTHS] = empty_list
                 with open(os.path.join(output_dir, file), mode="wt") as fd:
                     fd.write(
                         test_with_tags.to_json(orient="records", lines=True)
