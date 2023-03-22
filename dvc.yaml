@@ -77,6 +77,38 @@ stages:
         - data/preprocessed/${item}
       outs:
         - data/explanations/${item}/
+  attack_textfooler:
+    foreach:
+      - enron_spam
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_textfooler   
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_textfooler/${item}/
+  attack_textfooler_discard:
+    foreach:
+     - enron_spam
+     - 20_news
+     - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+       PYTHONPATH=. python experiments/scripts/attack.py
+       --dataset_name ${item} --attack_type attack_textfooler_discard
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+       - data/results/attack_textfooler_discard/${item}/       
   attack_basic:
     foreach:
       - enron_spam
@@ -86,11 +118,11 @@ stages:
       wdir: .
       cmd: >-
         PYTHONPATH=. python experiments/scripts/attack.py
-        --dataset_name ${item}
+        --dataset_name ${item} --attack_type attack_basic
       deps:
         - experiments/scripts/attack.py
         - data/models/${item}
-        - data/preprocessed/${item}
+        - data/classification/${item}
       outs:
         - data/results/attack_basic/${item}/
 
