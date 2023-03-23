@@ -17,8 +17,8 @@ stages:
       --output_dir data/models/enron_spam
     deps:
     - path: data/preprocessed/enron_spam
-      md5: b75efba1a62182dc8ac32acd1faf92ed.dir
-      size: 61709260
+      md5: 99d604f84516cee94948054a97ffec5e.dir
+      size: 71403809
       nfiles: 3
     - path: experiments/scripts/get_model.py
       md5: 5050f51b4019bba97af47971f6c7cab4
@@ -37,8 +37,8 @@ stages:
       size: 18505614
       nfiles: 6
     - path: data/preprocessed/enron_spam/
-      md5: b75efba1a62182dc8ac32acd1faf92ed.dir
-      size: 61709260
+      md5: 99d604f84516cee94948054a97ffec5e.dir
+      size: 71403809
       nfiles: 3
     - path: experiments/scripts/classify.py
       md5: 6fc1a6a0a11ba6cd99a8b6625a96d9f5
@@ -57,17 +57,17 @@ stages:
       size: 18505614
       nfiles: 6
     - path: data/preprocessed/enron_spam
-      md5: b75efba1a62182dc8ac32acd1faf92ed.dir
-      size: 61709260
+      md5: 99d604f84516cee94948054a97ffec5e.dir
+      size: 71403809
       nfiles: 3
     - path: experiments/scripts/explain.py
-      md5: afc02ef263a59c911098dea969faa932
-      size: 3234
+      md5: 4d82a557627f59c884f52fd7994ed80a
+      size: 4617
     outs:
     - path: data/explanations/enron_spam/
-      md5: 70c3f3d04e0b73fd56eecfda04914bd4.dir
-      size: 13589794
-      nfiles: 403
+      md5: 4a4630717bf6bf5027f1b70191c69a4c.dir
+      size: 33723647
+      nfiles: 4003
   download_dataset@poleval:
     cmd: PYTHONPATH=. python experiments/scripts/download_dataset.py --dataset_name
       poleval --output_dir data/datasets/poleval
@@ -88,12 +88,12 @@ stages:
       size: 1688836
       nfiles: 3
     - path: experiments/scripts/tag_dataset.py
-      md5: f73e2203fdb988a00d4e8363a349c617
-      size: 3932
+      md5: ebadced7a031a31bdaf935d2b22e5e05
+      size: 4632
     outs:
     - path: data/preprocessed/poleval/
-      md5: 9d067db65ba6a27db19effce45b01876.dir
-      size: 2541105
+      md5: b0ea9f0ad1dba6d3b474c0a3cedf866e.dir
+      size: 2812175
       nfiles: 3
   preprocess_dataset@enron_spam:
     cmd: PYTHONPATH=. python experiments/scripts/tag_dataset.py --dataset_name enron_spam
@@ -103,12 +103,12 @@ stages:
       size: 53096069
       nfiles: 3
     - path: experiments/scripts/tag_dataset.py
-      md5: f73e2203fdb988a00d4e8363a349c617
-      size: 3932
+      md5: ebadced7a031a31bdaf935d2b22e5e05
+      size: 4632
     outs:
     - path: data/preprocessed/enron_spam/
-      md5: 30c63efbc615347ddcb5f61e011113bd.dir
-      size: 65971374
+      md5: 99d604f84516cee94948054a97ffec5e.dir
+      size: 71403809
       nfiles: 3
   preprocess_dataset@wiki_pl:
     cmd: PYTHONPATH=. python experiments/scripts/tag_dataset.py --dataset_name wiki_pl
@@ -118,12 +118,12 @@ stages:
       size: 29115538
       nfiles: 3
     - path: experiments/scripts/tag_dataset.py
-      md5: f73e2203fdb988a00d4e8363a349c617
-      size: 3932
+      md5: ebadced7a031a31bdaf935d2b22e5e05
+      size: 4632
     outs:
     - path: data/preprocessed/wiki_pl/
-      md5: 0014b9bb52913cbc9a568d237ea2207b.dir
-      size: 65553079
+      md5: 066634606f832b6c9d1db95293de7e04.dir
+      size: 77818549
       nfiles: 3
   classify@wiki_pl:
     cmd: PYTHONPATH=. python experiments/scripts/classify.py --dataset_name wiki_pl
@@ -134,8 +134,8 @@ stages:
       size: 501711136
       nfiles: 7
     - path: data/preprocessed/wiki_pl/
-      md5: 3e9b2e1e0542777e0a751d9d7f7f4241.dir
-      size: 55380570
+      md5: 066634606f832b6c9d1db95293de7e04.dir
+      size: 77818549
       nfiles: 3
     - path: experiments/scripts/classify.py
       md5: 6fc1a6a0a11ba6cd99a8b6625a96d9f5
@@ -153,12 +153,12 @@ stages:
       size: 23460358
       nfiles: 3
     - path: experiments/scripts/tag_dataset.py
-      md5: f73e2203fdb988a00d4e8363a349c617
-      size: 3932
+      md5: ebadced7a031a31bdaf935d2b22e5e05
+      size: 4632
     outs:
     - path: data/preprocessed/20_news/
-      md5: 20da0980e52df537e5b7ca5db0305879.dir
-      size: 58582060
+      md5: a3d2da9ac72423e555ae7ed051741b30.dir
+      size: 69405970
       nfiles: 3
   classify@20_news:
     cmd: PYTHONPATH=. python experiments/scripts/classify.py --dataset_name 20_news
@@ -169,8 +169,8 @@ stages:
       size: 439008808
       nfiles: 6
     - path: data/preprocessed/20_news/
-      md5: 1ed5ef2dabe4bc05f7377175ed11137b.dir
-      size: 46845669
+      md5: a3d2da9ac72423e555ae7ed051741b30.dir
+      size: 69405970
       nfiles: 3
     - path: experiments/scripts/classify.py
       md5: 6fc1a6a0a11ba6cd99a8b6625a96d9f5
@@ -208,17 +208,17 @@ stages:
       size: 501711136
       nfiles: 7
     - path: data/preprocessed/wiki_pl
-      md5: 3e9b2e1e0542777e0a751d9d7f7f4241.dir
-      size: 55380570
+      md5: 066634606f832b6c9d1db95293de7e04.dir
+      size: 77818549
       nfiles: 3
     - path: experiments/scripts/explain.py
-      md5: afc02ef263a59c911098dea969faa932
-      size: 3234
+      md5: 4d82a557627f59c884f52fd7994ed80a
+      size: 4617
     outs:
     - path: data/explanations/wiki_pl/
-      md5: 5a3b9b069024456412078143e3af15d7.dir
-      size: 331450794
-      nfiles: 10065
+      md5: a11dc3a6b329a1d6bacd50c158ff3e6c.dir
+      size: 1096043911
+      nfiles: 100403
   explain@20_news:
     cmd: PYTHONPATH=. python experiments/scripts/explain.py --dataset_name 20_news
       --output_dir data/explanations/20_news
@@ -228,14 +228,14 @@ stages:
       size: 439008808
       nfiles: 6
     - path: data/preprocessed/20_news
-      md5: 1ed5ef2dabe4bc05f7377175ed11137b.dir
-      size: 46845669
+      md5: a3d2da9ac72423e555ae7ed051741b30.dir
+      size: 69405970
       nfiles: 3
     - path: experiments/scripts/explain.py
-      md5: afc02ef263a59c911098dea969faa932
-      size: 3234
+      md5: 4d82a557627f59c884f52fd7994ed80a
+      size: 4617
     outs:
     - path: data/explanations/20_news/
-      md5: c8ba90f9757a4e3cc4843d3791ef2446.dir
-      size: 232912969
-      nfiles: 14041
+      md5: ad1f9f0df287078edebed1e408df2c9f.dir
+      size: 869336544
+      nfiles: 140401

@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import shap
 import torch
+from tqdm import tqdm
 
 from text_attacks.utils import get_model_and_tokenizer
 
@@ -79,6 +80,14 @@ def main(
         f"data/preprocessed/{dataset_name}/adversarial.jsonl", lines=True
     )
     test_x = test["text"].tolist()
+    test_x = [
+        tokenizer.decode(
+            tokenizer.encode(
+                t, padding="do_not_pad", max_length=512, truncation=True
+            ),
+            skip_special_tokens=True
+        ) for t in test_x
+    ]
 
     predict = build_predict_fun(model, tokenizer)
     explainer = shap.Explainer(
@@ -100,14 +109,47 @@ def main(
 
     # LOCAL IMPORTANCE
     for class_id, class_name in model.config.id2label.items():
-        sub_dir = output_dir / "local" / class_name
+        sub_dir = output_dir / "local" / "adversarial" /class_name
         os.makedirs(sub_dir, exist_ok=True)
         for shap_id, text_id in enumerate(test["id"]):
             importance_df = get_importance(shap_values[shap_id, :, class_id])
             importance_df.to_json(
                 sub_dir / f"{text_id}__importance.json",
             )
+    
+    # LOCAL IMPORTANCE (test set)
+    test = pd.read_json(
+        f"data/preprocessed/{dataset_name}/test.jsonl", lines=True
+    )
+    test_x = test["text"].tolist()
+    test_x = [
+        tokenizer.decode(
+            tokenizer.encode(
+                t, padding="do_not_pad", max_length=512, truncation=True
+            ),
+            skip_special_tokens=True
+        ) for t in test_x
+    ]
 
+    predict = build_predict_fun(model, tokenizer)
+    explainer = shap.Explainer(
+        predict,
+        masker=tokenizer,
+        output_names=list(model.config.id2label.values())
+    )
+    for text_id, text in tqdm(
+        zip(test["id"], test_x),
+        total=len(test_x),
+        desc="Shap for test DS",
+    ):
+        shap_values = explainer([text])
+        for class_id, class_name in model.config.id2label.items():
+            sub_dir = output_dir / "local" / "test" / class_name
+            os.makedirs(sub_dir, exist_ok=True)
+            importance_df = get_importance(shap_values[0, :, class_id])
+            importance_df.to_json(
+                sub_dir / f"{text_id}__importance.json",
+            )
 
 if __name__ == "__main__":
     main()
