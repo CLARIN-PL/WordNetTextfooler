@@ -41,6 +41,9 @@ FEATURES = "features"
 IMPORTANCE = "importance"
 SYNONYM = "synonym"
 DISCARD = "discard"
+GLOBAL = "global"
+LOCAL = "local"
+
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
@@ -178,10 +181,18 @@ def main(dataset_name: str, attack_type: str):
         "20_news": "en",
         "wiki_pl": "pl",
     }[dataset_name]
+    xai_global, xai_local = load_xai_importance(
+        f"data/explanations/{dataset_name}"
+    ) if attack_type in ["attack_xai", "attack_xai_discard"] else {}, {}
+    xai_sub = 10
     params = {
         "attack_textfooler": [lang, SYNONYM],
         "attack_textfooler_discard": [lang, DISCARD],
-        "attack_basic": [lang, 0.5, 0.4, 0.3]  # prawopodobieństwa spacji  > usunięcia znaku > usunięcia słowa
+        "attack_basic": [lang, 0.5, 0.4, 0.3],  # prawopodobieństwa spacji  > usunięcia znaku > usunięcia słowa
+        "attack_xai": [lang, xai_global, xai_local, GLOBAL, SYNONYM, xai_sub],
+        "attack_xai_discard": [lang, xai_global, xai_local, GLOBAL, DISCARD, xai_sub],
+        "attack_xai_local": [lang, xai_global, xai_local, LOCAL, SYNONYM, xai_sub],
+        "attack_xai_discard_local": [lang, xai_global, xai_local, LOCAL, DISCARD, xai_sub]
     }[attack_type]
 
     output_dir = f"data/results/{attack_type}/{dataset_name}/"
@@ -189,10 +200,6 @@ def main(dataset_name: str, attack_type: str):
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, "test.jsonl")
     dataset_df = pd.read_json(input_file, lines=True)
-
-    # xai_global, xai_local = load_xai_importance(
-    #     f"data/explanations/{dataset_name}"
-    # ) if attack_type == "attack_xai" else {}, {}
 
     max_sub = 1
 

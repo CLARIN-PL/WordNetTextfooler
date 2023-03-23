@@ -359,3 +359,23 @@ stages:
       md5: 8a78484bd77916f82021a72338342a44.dir
       size: 2816160
       nfiles: 2
+  attack_textfooler_discard@20_news:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name 20_news
+      --attack_type attack_textfooler_discard
+    deps:
+    - path: data/classification/20_news
+      md5: b73611443c4189af91b827c083f37e0b.dir
+      size: 42897496
+      nfiles: 2
+    - path: data/models/20_news
+      md5: 43d68a67ecb8149bd6bf50db9767cb64.dir
+      size: 439008808
+      nfiles: 6
+    - path: experiments/scripts/attack.py
+      md5: 9e913b341cb0993625a41c401d64a30b
+      size: 12017
+    outs:
+    - path: data/results/attack_textfooler_discard/20_news/
+      md5: 82d89b00a710e9de0a2157357fed5894.dir
+      size: 24977923
+      nfiles: 2
