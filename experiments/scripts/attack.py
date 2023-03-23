@@ -149,6 +149,7 @@ def load_dir_files(dir_path):
             }
     return result
 
+
 def load_xai_importance(input_dir):
     global_xai_dir = os.path.join(input_dir, "global")
     local_xai_dir = os.path.join(input_dir, "local")
@@ -181,10 +182,11 @@ def main(dataset_name: str, attack_type: str):
         "20_news": "en",
         "wiki_pl": "pl",
     }[dataset_name]
-    xai_global, xai_local = load_xai_importance(
-        f"data/explanations/{dataset_name}"
-    ) if attack_type in ["attack_xai", "attack_xai_discard"] else {}, {}
-    xai_sub = 10
+    xai_global, xai_local = {}, {}
+    if "attack_xai" in attack_type:
+        importance = load_xai_importance(f"data/explanations/{dataset_name}")
+        xai_global, xai_local = importance[0], importance[1]
+    xai_sub = 5
     params = {
         "attack_textfooler": [lang, SYNONYM],
         "attack_textfooler_discard": [lang, DISCARD],

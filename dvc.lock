@@ -379,3 +379,43 @@ stages:
       md5: 82d89b00a710e9de0a2157357fed5894.dir
       size: 24977923
       nfiles: 2
+  attack_xai@enron_spam:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name enron_spam
+      --attack_type attack_xai
+    deps:
+    - path: data/classification/enron_spam
+      md5: 5de1a2fcbae0de94f5fbfd2bb747d919.dir
+      size: 14585920
+      nfiles: 2
+    - path: data/models/enron_spam
+      md5: 3e16b22f59532c66beeadea958e0579a.dir
+      size: 18505614
+      nfiles: 6
+    - path: experiments/scripts/attack.py
+      md5: 87f54ee4e2a08f1259d9d8b2d01fe1b9
+      size: 12061
+    outs:
+    - path: data/results/attack_xai/enron_spam/
+      md5: ad19831866da140de113e64862da0bce.dir
+      size: 2860109
+      nfiles: 2
+  attack_xai@20_news:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name 20_news
+      --attack_type attack_xai
+    deps:
+    - path: data/classification/20_news
+      md5: b73611443c4189af91b827c083f37e0b.dir
+      size: 42897496
+      nfiles: 2
+    - path: data/models/20_news
+      md5: 43d68a67ecb8149bd6bf50db9767cb64.dir
+      size: 439008808
+      nfiles: 6
+    - path: experiments/scripts/attack.py
+      md5: 87f54ee4e2a08f1259d9d8b2d01fe1b9
+      size: 12061
+    outs:
+    - path: data/results/attack_xai/20_news/
+      md5: af00c730d4d73a0a8e2a047882c0d9aa.dir
+      size: 8739816
+      nfiles: 2

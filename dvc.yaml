@@ -108,7 +108,71 @@ stages:
         - data/models/${item}
         - data/classification/${item}
       outs:
-       - data/results/attack_textfooler_discard/${item}/       
+       - data/results/attack_textfooler_discard/${item}/
+  attack_xai:
+    foreach:
+      - enron_spam
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_xai
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_xai/${item}/
+  attack_xai_discard:
+    foreach:
+      - enron_spam
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_xai_discard
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_xai_discard/${item}/
+  attack_xai_local:
+    foreach:
+      - enron_spam
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_xai_local
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_xai_local/${item}/
+  attack_xai_discard_local:
+    foreach:
+      - enron_spam
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_xai_discard_local
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_xai_discard_local/${item}/      
   attack_basic:
     foreach:
       - enron_spam
