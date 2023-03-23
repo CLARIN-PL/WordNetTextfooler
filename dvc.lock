@@ -419,3 +419,23 @@ stages:
       md5: af00c730d4d73a0a8e2a047882c0d9aa.dir
       size: 8739816
       nfiles: 2
+  attack_xai@wiki_pl:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name wiki_pl
+      --attack_type attack_xai
+    deps:
+    - path: data/classification/wiki_pl
+      md5: 88c3cea96b2cb3ddda1a82037bf6130a.dir
+      size: 44196727
+      nfiles: 2
+    - path: data/models/wiki_pl
+      md5: fd453042628fb09c080ef05d34a32cce.dir
+      size: 501711136
+      nfiles: 7
+    - path: experiments/scripts/attack.py
+      md5: 87f54ee4e2a08f1259d9d8b2d01fe1b9
+      size: 12061
+    outs:
+    - path: data/results/attack_xai/wiki_pl/
+      md5: e24c456f63d8e13b92fcab51e0726141.dir
+      size: 8287334
+      nfiles: 2
