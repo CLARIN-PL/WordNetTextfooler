@@ -160,7 +160,7 @@ def load_xai_importance(input_dir):
     for c_name in local_dirs:
         for f_name, value_df in local_class_to_file[c_name].items():
             local_file_to_class[f_name][c_name] = value_df
-    return load_dir_files(global_xai_dir), local_file_to_class
+    return load_dir_files(global_xai_dir), dict(local_file_to_class)
 
 
 @click.command()
@@ -236,11 +236,6 @@ def main(dataset_name: str, attack_type: str):
         Process(target=spoil_queue, args=(queues[0], queues[1], queues[5], max_sub, attack_type, params)),
         Process(target=spoil_queue, args=(queues[0], queues[1], queues[5], max_sub, attack_type, params)),
         Process(target=spoil_queue, args=(queues[0], queues[1], queues[5], max_sub, attack_type, params)),
-        # Process(target=spoil_queue, args=(queues[0], queues[1], queues[5], max_sub, attack_type, params)),
-        # Process(target=spoil_queue, args=(queues[0], queues[1], queues[5], max_sub, attack_type, params)),
-        # Process(target=spoil_queue, args=(queues[0], queues[1], queues[5], max_sub, attack_type, params)),
-        # Process(target=spoil_queue, args=(queues[0], queues[1], queues[5], max_sub, attack_type, params)),
-        # Process(target=spoil_queue, args=(queues[0], queues[1], queues[5], max_sub, attack_type, params)),
         Process(target=spoil_queue, args=(queues[0], queues[1], queues[5], max_sub, attack_type, params)),
         Process(target=spoil_queue, args=(queues[0], queues[1], queues[5], max_sub, attack_type, params)),
         # spoiling 0 -> 1

@@ -439,3 +439,183 @@ stages:
       md5: e24c456f63d8e13b92fcab51e0726141.dir
       size: 8287334
       nfiles: 2
+  attack_xai_local@wiki_pl:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name wiki_pl
+      --attack_type attack_xai_local
+    deps:
+    - path: data/classification/wiki_pl
+      md5: 88c3cea96b2cb3ddda1a82037bf6130a.dir
+      size: 44196727
+      nfiles: 2
+    - path: data/models/wiki_pl
+      md5: fd453042628fb09c080ef05d34a32cce.dir
+      size: 501711136
+      nfiles: 7
+    - path: experiments/scripts/attack.py
+      md5: 179daab5a9e2de043c4a1ceab645f1d1
+      size: 12567
+    outs:
+    - path: data/results/attack_xai_local/wiki_pl/
+      md5: 68c80f37032f9e2be614a08bac461ecc.dir
+      size: 8303425
+      nfiles: 2
+  attack_xai_local@20_news:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name 20_news
+      --attack_type attack_xai_local
+    deps:
+    - path: data/classification/20_news
+      md5: b73611443c4189af91b827c083f37e0b.dir
+      size: 42897496
+      nfiles: 2
+    - path: data/models/20_news
+      md5: 43d68a67ecb8149bd6bf50db9767cb64.dir
+      size: 439008808
+      nfiles: 6
+    - path: experiments/scripts/attack.py
+      md5: 6e7aa3d45f4726ada7d8271c03c6dcb9
+      size: 12245
+    outs:
+    - path: data/results/attack_xai_local/20_news/
+      md5: eafd38e0be43782c2d44a1f1d03dc4fa.dir
+      size: 8782702
+      nfiles: 2
+  attack_xai_local@enron_spam:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name enron_spam
+      --attack_type attack_xai_local
+    deps:
+    - path: data/classification/enron_spam
+      md5: 5de1a2fcbae0de94f5fbfd2bb747d919.dir
+      size: 14585920
+      nfiles: 2
+    - path: data/models/enron_spam
+      md5: 3e16b22f59532c66beeadea958e0579a.dir
+      size: 18505614
+      nfiles: 6
+    - path: experiments/scripts/attack.py
+      md5: 6e7aa3d45f4726ada7d8271c03c6dcb9
+      size: 12245
+    outs:
+    - path: data/results/attack_xai_local/enron_spam/
+      md5: 817eb5deaab1174c354753888d5d4fcf.dir
+      size: 2849176
+      nfiles: 2
+  attack_xai_discard_local@enron_spam:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name enron_spam
+      --attack_type attack_xai_discard_local
+    deps:
+    - path: data/classification/enron_spam
+      md5: 5de1a2fcbae0de94f5fbfd2bb747d919.dir
+      size: 14585920
+      nfiles: 2
+    - path: data/models/enron_spam
+      md5: 3e16b22f59532c66beeadea958e0579a.dir
+      size: 18505614
+      nfiles: 6
+    - path: experiments/scripts/attack.py
+      md5: 9518ec9af275d6a12fede47dff6767e1
+      size: 11530
+    outs:
+    - path: data/results/attack_xai_discard_local/enron_spam/
+      md5: 9502192c403965fba143cccf52a969a8.dir
+      size: 2851184
+      nfiles: 2
+  attack_xai_discard_local@20_news:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name 20_news
+      --attack_type attack_xai_discard_local
+    deps:
+    - path: data/classification/20_news
+      md5: b73611443c4189af91b827c083f37e0b.dir
+      size: 42897496
+      nfiles: 2
+    - path: data/models/20_news
+      md5: 43d68a67ecb8149bd6bf50db9767cb64.dir
+      size: 439008808
+      nfiles: 6
+    - path: experiments/scripts/attack.py
+      md5: 9518ec9af275d6a12fede47dff6767e1
+      size: 11530
+    outs:
+    - path: data/results/attack_xai_discard_local/20_news/
+      md5: 2cedd26b444eeded49e6b629c8f4a705.dir
+      size: 8824300
+      nfiles: 2
+  attack_xai_discard_local@wiki_pl:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name wiki_pl
+      --attack_type attack_xai_discard_local
+    deps:
+    - path: data/classification/wiki_pl
+      md5: 88c3cea96b2cb3ddda1a82037bf6130a.dir
+      size: 44196727
+      nfiles: 2
+    - path: data/models/wiki_pl
+      md5: fd453042628fb09c080ef05d34a32cce.dir
+      size: 501711136
+      nfiles: 7
+    - path: experiments/scripts/attack.py
+      md5: 9518ec9af275d6a12fede47dff6767e1
+      size: 11530
+    outs:
+    - path: data/results/attack_xai_discard_local/wiki_pl/
+      md5: e6675a5b98f546d15fd702eec39aca80.dir
+      size: 8355063
+      nfiles: 2
+  attack_xai_discard@wiki_pl:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name wiki_pl
+      --attack_type attack_xai_discard
+    deps:
+    - path: data/classification/wiki_pl
+      md5: 88c3cea96b2cb3ddda1a82037bf6130a.dir
+      size: 44196727
+      nfiles: 2
+    - path: data/models/wiki_pl
+      md5: fd453042628fb09c080ef05d34a32cce.dir
+      size: 501711136
+      nfiles: 7
+    - path: experiments/scripts/attack.py
+      md5: 9518ec9af275d6a12fede47dff6767e1
+      size: 11530
+    outs:
+    - path: data/results/attack_xai_discard/wiki_pl/
+      md5: 41eef4e1d89a1dc0d4c38953a5661d57.dir
+      size: 8271473
+      nfiles: 2
+  attack_xai_discard@enron_spam:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name enron_spam
+      --attack_type attack_xai_discard
+    deps:
+    - path: data/classification/enron_spam
+      md5: 5de1a2fcbae0de94f5fbfd2bb747d919.dir
+      size: 14585920
+      nfiles: 2
+    - path: data/models/enron_spam
+      md5: 3e16b22f59532c66beeadea958e0579a.dir
+      size: 18505614
+      nfiles: 6
+    - path: experiments/scripts/attack.py
+      md5: 9518ec9af275d6a12fede47dff6767e1
+      size: 11530
+    outs:
+    - path: data/results/attack_xai_discard/enron_spam/
+      md5: c6465ee654e4abb259b1fe6c16cdf252.dir
+      size: 2864609
+      nfiles: 2
+  attack_xai_discard@20_news:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name 20_news
+      --attack_type attack_xai_discard
+    deps:
+    - path: data/classification/20_news
+      md5: b73611443c4189af91b827c083f37e0b.dir
+      size: 42897496
+      nfiles: 2
+    - path: data/models/20_news
+      md5: 43d68a67ecb8149bd6bf50db9767cb64.dir
+      size: 439008808
+      nfiles: 6
+    - path: experiments/scripts/attack.py
+      md5: 9518ec9af275d6a12fede47dff6767e1
+      size: 11530
+    outs:
+    - path: data/results/attack_xai_discard/20_news/
+      md5: cf50de2dc4e301284b43e3ec2cb04096.dir
+      size: 8775847
+      nfiles: 2
