@@ -152,7 +152,7 @@ def load_dir_files(dir_path):
 
 def load_xai_importance(input_dir):
     global_xai_dir = os.path.join(input_dir, "global")
-    local_xai_dir = os.path.join(input_dir, "local")
+    local_xai_dir = os.path.join(input_dir, "local", "test")
     local_dirs = os.listdir(local_xai_dir)
     local_class_to_file = {dir_name: load_dir_files(os.path.join(local_xai_dir, dir_name))
                            for dir_name in local_dirs}

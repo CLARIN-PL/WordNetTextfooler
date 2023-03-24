@@ -236,9 +236,9 @@ stages:
       size: 4617
     outs:
     - path: data/explanations/20_news/
-      md5: c8ba90f9757a4e3cc4843d3791ef2446.dir
-      size: 232912969
-      nfiles: 14041
+      md5: ad1f9f0df287078edebed1e408df2c9f.dir
+      size: 869336544
+      nfiles: 140401
   attack_basic@wiki_pl:
     cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name wiki_pl
       --attack_type attack_basic
