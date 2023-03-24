@@ -77,6 +77,102 @@ stages:
         - data/preprocessed/${item}
       outs:
         - data/explanations/${item}/
+  attack_textfooler:
+    foreach:
+      - enron_spam
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_textfooler   
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_textfooler/${item}/
+  attack_textfooler_discard:
+    foreach:
+     - enron_spam
+     - 20_news
+     - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+       PYTHONPATH=. python experiments/scripts/attack.py
+       --dataset_name ${item} --attack_type attack_textfooler_discard
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+       - data/results/attack_textfooler_discard/${item}/
+  attack_xai:
+    foreach:
+      - enron_spam
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_xai
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_xai/${item}/
+  attack_xai_discard:
+    foreach:
+      - enron_spam
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_xai_discard
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_xai_discard/${item}/
+  attack_xai_local:
+    foreach:
+      - enron_spam
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_xai_local
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_xai_local/${item}/
+  attack_xai_discard_local:
+    foreach:
+      - enron_spam
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_xai_discard_local
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_xai_discard_local/${item}/      
   attack_basic:
     foreach:
       - enron_spam
@@ -86,11 +182,11 @@ stages:
       wdir: .
       cmd: >-
         PYTHONPATH=. python experiments/scripts/attack.py
-        --dataset_name ${item}
+        --dataset_name ${item} --attack_type attack_basic
       deps:
         - experiments/scripts/attack.py
         - data/models/${item}
-        - data/preprocessed/${item}
+        - data/classification/${item}
       outs:
         - data/results/attack_basic/${item}/
 

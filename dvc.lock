@@ -45,8 +45,8 @@ stages:
       size: 1181
     outs:
     - path: data/classification/enron_spam
-      md5: 0450c0b672bc4a5db3cc7be2dac786bd.dir
-      size: 10674882
+      md5: 5de1a2fcbae0de94f5fbfd2bb747d919.dir
+      size: 14585920
       nfiles: 2
   explain@enron_spam:
     cmd: PYTHONPATH=. python experiments/scripts/explain.py --dataset_name enron_spam
@@ -142,8 +142,8 @@ stages:
       size: 1181
     outs:
     - path: data/classification/wiki_pl
-      md5: 515330772505f489b55686545bcf23a0.dir
-      size: 34103198
+      md5: 88c3cea96b2cb3ddda1a82037bf6130a.dir
+      size: 44196727
       nfiles: 2
   preprocess_dataset@20_news:
     cmd: PYTHONPATH=. python experiments/scripts/tag_dataset.py --dataset_name 20_news
@@ -177,8 +177,8 @@ stages:
       size: 1181
     outs:
     - path: data/classification/20_news
-      md5: 6831f104f7c20541548fe72250c45706.dir
-      size: 31286120
+      md5: b73611443c4189af91b827c083f37e0b.dir
+      size: 42897496
       nfiles: 2
   attack_basic@enron_spam:
     cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name enron_spam
@@ -239,3 +239,203 @@ stages:
       md5: ad1f9f0df287078edebed1e408df2c9f.dir
       size: 869336544
       nfiles: 140401
+  attack_basic@wiki_pl:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name wiki_pl
+      --attack_type attack_basic
+    deps:
+    - path: data/models/wiki_pl
+      md5: fd453042628fb09c080ef05d34a32cce.dir
+      size: 501711136
+      nfiles: 7
+    - path: data/preprocessed/wiki_pl
+      md5: 0014b9bb52913cbc9a568d237ea2207b.dir
+      size: 65553079
+      nfiles: 3
+    - path: experiments/scripts/attack.py
+      md5: 702997933e5af85d09d8286a14e2cc05
+      size: 2486
+    outs:
+    - path: data/results/attack_basic/wiki_pl/
+      md5: f118a41e391b5f713f77611140f2f2cc.dir
+      size: 1
+      nfiles: 1
+  attack_textfooler@enron_spam:
+    cmd: 'PYTHONPATH=. python experiments/scripts/attack.py --dataset_name enron_spam
+      --attack_type attack_textfooler   '
+    deps:
+    - path: data/models/enron_spam
+      md5: 3e16b22f59532c66beeadea958e0579a.dir
+      size: 18505614
+      nfiles: 6
+    - path: data/preprocessed/enron_spam
+      md5: 30c63efbc615347ddcb5f61e011113bd.dir
+      size: 65971374
+      nfiles: 3
+    - path: experiments/scripts/attack.py
+      md5: b9d9a4d9fcba1cb4dfbb554ecc3e26fb
+      size: 10083
+    outs:
+    - path: data/results/attack_textfooler/enron_spam/
+      md5: 10ecd4c940e8df1058465048ffbe78d4.dir
+      size: 3291044
+      nfiles: 2
+  attack_textfooler@20_news:
+    cmd: 'PYTHONPATH=. python experiments/scripts/attack.py --dataset_name 20_news
+      --attack_type attack_textfooler   '
+    deps:
+    - path: data/models/20_news
+      md5: 43d68a67ecb8149bd6bf50db9767cb64.dir
+      size: 439008808
+      nfiles: 6
+    - path: data/preprocessed/20_news
+      md5: 20da0980e52df537e5b7ca5db0305879.dir
+      size: 58582060
+      nfiles: 3
+    - path: experiments/scripts/attack.py
+      md5: 4fe9c6210ce0f3be66b54c2565ad2daa
+      size: 10132
+    outs:
+    - path: data/results/attack_textfooler/20_news/
+      md5: 007aba16e343ca283180c7bc7b9a0190.dir
+      size: 93666157
+      nfiles: 2
+  attack_textfooler@wiki_pl:
+    cmd: 'PYTHONPATH=. python experiments/scripts/attack.py --dataset_name wiki_pl
+      --attack_type attack_textfooler   '
+    deps:
+    - path: data/classification/wiki_pl
+      md5: 88c3cea96b2cb3ddda1a82037bf6130a.dir
+      size: 44196727
+      nfiles: 2
+    - path: data/models/wiki_pl
+      md5: fd453042628fb09c080ef05d34a32cce.dir
+      size: 501711136
+      nfiles: 7
+    - path: experiments/scripts/attack.py
+      md5: 2977363ba8806c393498f98d5733c013
+      size: 11497
+    outs:
+    - path: data/results/attack_textfooler/wiki_pl/
+      md5: eccc12b9a5ae383ea02067cd1955753e.dir
+      size: 20293404
+      nfiles: 2
+  attack_textfooler_discard@wiki_pl:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name wiki_pl
+      --attack_type attack_textfooler_discard
+    deps:
+    - path: data/classification/wiki_pl
+      md5: 88c3cea96b2cb3ddda1a82037bf6130a.dir
+      size: 44196727
+      nfiles: 2
+    - path: data/models/wiki_pl
+      md5: fd453042628fb09c080ef05d34a32cce.dir
+      size: 501711136
+      nfiles: 7
+    - path: experiments/scripts/attack.py
+      md5: 2b9ddc1ff1f56855ff667171ba04ed78
+      size: 11606
+    outs:
+    - path: data/results/attack_textfooler_discard/wiki_pl/
+      md5: e41122c3cdf76ad1b163aba49acce0f0.dir
+      size: 14396685
+      nfiles: 2
+  attack_textfooler_discard@enron_spam:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name enron_spam
+      --attack_type attack_textfooler_discard
+    deps:
+    - path: data/classification/enron_spam
+      md5: 5de1a2fcbae0de94f5fbfd2bb747d919.dir
+      size: 14585920
+      nfiles: 2
+    - path: data/models/enron_spam
+      md5: 3e16b22f59532c66beeadea958e0579a.dir
+      size: 18505614
+      nfiles: 6
+    - path: experiments/scripts/attack.py
+      md5: 2b9ddc1ff1f56855ff667171ba04ed78
+      size: 11606
+    outs:
+    - path: data/results/attack_textfooler_discard/enron_spam/
+      md5: 8a78484bd77916f82021a72338342a44.dir
+      size: 2816160
+      nfiles: 2
+  attack_textfooler_discard@20_news:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name 20_news
+      --attack_type attack_textfooler_discard
+    deps:
+    - path: data/classification/20_news
+      md5: b73611443c4189af91b827c083f37e0b.dir
+      size: 42897496
+      nfiles: 2
+    - path: data/models/20_news
+      md5: 43d68a67ecb8149bd6bf50db9767cb64.dir
+      size: 439008808
+      nfiles: 6
+    - path: experiments/scripts/attack.py
+      md5: 9e913b341cb0993625a41c401d64a30b
+      size: 12017
+    outs:
+    - path: data/results/attack_textfooler_discard/20_news/
+      md5: 82d89b00a710e9de0a2157357fed5894.dir
+      size: 24977923
+      nfiles: 2
+  attack_xai@enron_spam:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name enron_spam
+      --attack_type attack_xai
+    deps:
+    - path: data/classification/enron_spam
+      md5: 5de1a2fcbae0de94f5fbfd2bb747d919.dir
+      size: 14585920
+      nfiles: 2
+    - path: data/models/enron_spam
+      md5: 3e16b22f59532c66beeadea958e0579a.dir
+      size: 18505614
+      nfiles: 6
+    - path: experiments/scripts/attack.py
+      md5: 87f54ee4e2a08f1259d9d8b2d01fe1b9
+      size: 12061
+    outs:
+    - path: data/results/attack_xai/enron_spam/
+      md5: ad19831866da140de113e64862da0bce.dir
+      size: 2860109
+      nfiles: 2
+  attack_xai@20_news:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name 20_news
+      --attack_type attack_xai
+    deps:
+    - path: data/classification/20_news
+      md5: b73611443c4189af91b827c083f37e0b.dir
+      size: 42897496
+      nfiles: 2
+    - path: data/models/20_news
+      md5: 43d68a67ecb8149bd6bf50db9767cb64.dir
+      size: 439008808
+      nfiles: 6
+    - path: experiments/scripts/attack.py
+      md5: 87f54ee4e2a08f1259d9d8b2d01fe1b9
+      size: 12061
+    outs:
+    - path: data/results/attack_xai/20_news/
+      md5: af00c730d4d73a0a8e2a047882c0d9aa.dir
+      size: 8739816
+      nfiles: 2
+  attack_xai@wiki_pl:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name wiki_pl
+      --attack_type attack_xai
+    deps:
+    - path: data/classification/wiki_pl
+      md5: 88c3cea96b2cb3ddda1a82037bf6130a.dir
+      size: 44196727
+      nfiles: 2
+    - path: data/models/wiki_pl
+      md5: fd453042628fb09c080ef05d34a32cce.dir
+      size: 501711136
+      nfiles: 7
+    - path: experiments/scripts/attack.py
+      md5: 87f54ee4e2a08f1259d9d8b2d01fe1b9
+      size: 12061
+    outs:
+    - path: data/results/attack_xai/wiki_pl/
+      md5: e24c456f63d8e13b92fcab51e0726141.dir
+      size: 8287334
+      nfiles: 2

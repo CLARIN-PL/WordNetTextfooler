@@ -23,7 +23,7 @@ def get_classify_function(device="cpu"):
         logits = list()
         i = 0
         for chunk in tqdm(
-            [texts[pos:pos + 256] for pos in range(0, len(texts), 256)]
+            [texts[pos:pos + 128] for pos in range(0, len(texts), 128)]
         ):
             encoded_inputs = tokenizer(
                 chunk,
