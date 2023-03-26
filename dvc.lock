@@ -639,3 +639,59 @@ stages:
       md5: d9595138a6aca9cad4c39b1c5fdbfce1.dir
       size: 38396600
       nfiles: 2
+  get_model@poleval:
+    cmd: PYTHONPATH=. python experiments/scripts/get_model.py --dataset_name poleval
+      --output_dir data/models/poleval
+    deps:
+    - path: data/preprocessed/poleval
+      md5: b0ea9f0ad1dba6d3b474c0a3cedf866e.dir
+      size: 2812175
+      nfiles: 3
+    - path: experiments/scripts/get_model.py
+      md5: 5050f51b4019bba97af47971f6c7cab4
+      size: 747
+    outs:
+    - path: data/models/poleval/
+      md5: 8f806cb1b2eb0dd097811d42e4bf9c2d.dir
+      size: 501609312
+      nfiles: 7
+  explain@poleval:
+    cmd: PYTHONPATH=. python experiments/scripts/explain.py --dataset_name poleval
+      --output_dir data/explanations/poleval
+    deps:
+    - path: data/models/poleval
+      md5: 8f806cb1b2eb0dd097811d42e4bf9c2d.dir
+      size: 501609312
+      nfiles: 7
+    - path: data/preprocessed/poleval
+      md5: b0ea9f0ad1dba6d3b474c0a3cedf866e.dir
+      size: 2812175
+      nfiles: 3
+    - path: experiments/scripts/explain.py
+      md5: 4d82a557627f59c884f52fd7994ed80a
+      size: 4617
+    outs:
+    - path: data/explanations/poleval/
+      md5: 246ec6832b514bbfc7ff6bcdb0d9f292.dir
+      size: 2377833
+      nfiles: 2003
+  classify@poleval:
+    cmd: PYTHONPATH=. python experiments/scripts/classify.py --dataset_name poleval
+      --output_dir data/classification/poleval
+    deps:
+    - path: data/models/poleval/
+      md5: 8f806cb1b2eb0dd097811d42e4bf9c2d.dir
+      size: 501609312
+      nfiles: 7
+    - path: data/preprocessed/poleval/
+      md5: b0ea9f0ad1dba6d3b474c0a3cedf866e.dir
+      size: 2812175
+      nfiles: 3
+    - path: experiments/scripts/classify.py
+      md5: 6fc1a6a0a11ba6cd99a8b6625a96d9f5
+      size: 1181
+    outs:
+    - path: data/classification/poleval
+      md5: f207458f9365a74672c31b5ffb2a83af.dir
+      size: 787456
+      nfiles: 2
