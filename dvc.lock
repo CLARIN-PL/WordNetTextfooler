@@ -816,3 +816,23 @@ stages:
       md5: 71e521e256665812795d75e545ee4e9a.dir
       size: 205890
       nfiles: 2
+  attack_textfooler@poleval:
+    cmd: 'PYTHONPATH=. python experiments/scripts/attack.py --dataset_name poleval
+      --attack_type attack_textfooler   '
+    deps:
+    - path: data/classification/poleval
+      md5: f207458f9365a74672c31b5ffb2a83af.dir
+      size: 787456
+      nfiles: 2
+    - path: data/models/poleval
+      md5: 8f806cb1b2eb0dd097811d42e4bf9c2d.dir
+      size: 501609312
+      nfiles: 7
+    - path: experiments/scripts/attack.py
+      md5: 9518ec9af275d6a12fede47dff6767e1
+      size: 11530
+    outs:
+    - path: data/results/attack_textfooler/poleval/
+      md5: 1cc24839e9c653182cb312f5c66a6a88.dir
+      size: 275318
+      nfiles: 2
