@@ -695,3 +695,23 @@ stages:
       md5: f207458f9365a74672c31b5ffb2a83af.dir
       size: 787456
       nfiles: 2
+  attack_xai_local@poleval:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name poleval
+      --attack_type attack_xai_local
+    deps:
+    - path: data/classification/poleval
+      md5: f207458f9365a74672c31b5ffb2a83af.dir
+      size: 787456
+      nfiles: 2
+    - path: data/models/poleval
+      md5: 8f806cb1b2eb0dd097811d42e4bf9c2d.dir
+      size: 501609312
+      nfiles: 7
+    - path: experiments/scripts/attack.py
+      md5: 9518ec9af275d6a12fede47dff6767e1
+      size: 11530
+    outs:
+    - path: data/results/attack_xai_local/poleval/
+      md5: 7597e90d1ddfa82615e79f6821d90e1b.dir
+      size: 188754
+      nfiles: 2
