@@ -709,12 +709,12 @@ stages:
       size: 501609312
       nfiles: 7
     - path: experiments/scripts/attack.py
-      md5: 9518ec9af275d6a12fede47dff6767e1
-      size: 11530
+      md5: c464fe658004e1d0b2f45bf0dbdbfb42
+      size: 11947
     outs:
     - path: data/results/attack_xai_local/poleval/
-      md5: 7597e90d1ddfa82615e79f6821d90e1b.dir
-      size: 188754
+      md5: 3f47355fe91d8df7cb5b598da22bccdc.dir
+      size: 275308
       nfiles: 2
   attack_xai_discard_local@poleval:
     cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name poleval
@@ -749,12 +749,12 @@ stages:
       size: 501609312
       nfiles: 7
     - path: experiments/scripts/attack.py
-      md5: 9518ec9af275d6a12fede47dff6767e1
-      size: 11530
+      md5: 5c37737865b0e3524be76396330e683f
+      size: 9556
     outs:
     - path: data/results/attack_xai/poleval/
-      md5: d368af0f7069a5f43b9cf6f3a0422522.dir
-      size: 189001
+      md5: 1ed13c64a5ae2ed24598be64b36ad26e.dir
+      size: 84472229
       nfiles: 2
   attack_xai_discard@poleval:
     cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name poleval
@@ -769,12 +769,12 @@ stages:
       size: 501609312
       nfiles: 7
     - path: experiments/scripts/attack.py
-      md5: 9518ec9af275d6a12fede47dff6767e1
-      size: 11530
+      md5: e46bca05ac076c87522c7318257026ba
+      size: 10247
     outs:
     - path: data/results/attack_xai_discard/poleval/
-      md5: 83bbb41d4e1303329330c981cf50ece6.dir
-      size: 188316
+      md5: 70dbf6dacdfb2be5e41e462bd9b6ad8d.dir
+      size: 8606443
       nfiles: 2
   attack_basic@poleval:
     cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name poleval
@@ -789,12 +789,12 @@ stages:
       size: 501609312
       nfiles: 7
     - path: experiments/scripts/attack.py
-      md5: 9518ec9af275d6a12fede47dff6767e1
-      size: 11530
+      md5: d2a15a7f4c3d065c67db7caf4aaa0dae
+      size: 9556
     outs:
     - path: data/results/attack_basic/poleval/
-      md5: 2ba20316e75c6401e764a42c8c9ba02d.dir
-      size: 220962
+      md5: 70849358008ba01eebce555a4a1e1482.dir
+      size: 238609
       nfiles: 2
   attack_textfooler_discard@poleval:
     cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name poleval
@@ -809,12 +809,12 @@ stages:
       size: 501609312
       nfiles: 7
     - path: experiments/scripts/attack.py
-      md5: 9518ec9af275d6a12fede47dff6767e1
-      size: 11530
+      md5: d2a15a7f4c3d065c67db7caf4aaa0dae
+      size: 9556
     outs:
     - path: data/results/attack_textfooler_discard/poleval/
-      md5: 71e521e256665812795d75e545ee4e9a.dir
-      size: 205890
+      md5: 884f622d1b9a8e531583ff6dcabe3f95.dir
+      size: 1536088
       nfiles: 2
   attack_textfooler@poleval:
     cmd: 'PYTHONPATH=. python experiments/scripts/attack.py --dataset_name poleval
@@ -829,10 +829,30 @@ stages:
       size: 501609312
       nfiles: 7
     - path: experiments/scripts/attack.py
-      md5: 9518ec9af275d6a12fede47dff6767e1
-      size: 11530
+      md5: 5c37737865b0e3524be76396330e683f
+      size: 9556
     outs:
     - path: data/results/attack_textfooler/poleval/
-      md5: 1cc24839e9c653182cb312f5c66a6a88.dir
-      size: 275318
+      md5: 37e5f7b554c1959fbf1fabb84bf32ed8.dir
+      size: 89141787
+      nfiles: 2
+  attack_xai_char_discard@poleval:
+    cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name poleval
+      --attack_type attack_xai_char_discard
+    deps:
+    - path: data/classification/poleval
+      md5: f207458f9365a74672c31b5ffb2a83af.dir
+      size: 787456
+      nfiles: 2
+    - path: data/models/poleval
+      md5: 8f806cb1b2eb0dd097811d42e4bf9c2d.dir
+      size: 501609312
+      nfiles: 7
+    - path: experiments/scripts/attack.py
+      md5: aa42fd50ddee64a0002e210270376b88
+      size: 10247
+    outs:
+    - path: data/results/attack_xai_char_discard/poleval/
+      md5: 134ee8022b841597f6a14796bdbbcf30.dir
+      size: 142837300
       nfiles: 2

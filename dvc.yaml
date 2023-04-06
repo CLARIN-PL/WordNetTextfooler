@@ -199,4 +199,37 @@ stages:
         - data/classification/${item}
       outs:
         - data/results/attack_basic/${item}/
-
+  attack_xai_char_discard:
+    foreach:
+      - enron_spam
+      - poleval
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_xai_char_discard
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_xai_char_discard/${item}/
+  attack_xai_char_discard_local:
+    foreach:
+      - enron_spam
+      - poleval
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_xai_char_discard_local
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_xai_char_discard_local/${item}/   
