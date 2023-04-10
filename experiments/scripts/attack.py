@@ -15,6 +15,7 @@ from multiprocessing import Process
 from multiprocessing import Queue, Manager
 from threading import Thread
 from sklearn.metrics import classification_report, confusion_matrix
+from string import punctuation
 
 
 TEXT = "text"
@@ -36,7 +37,7 @@ EXPECTED = "expected"
 ACTUAL = "actual"
 COSINE_SCORE = "cosine_score"
 CLASS = "class"
-QUEUE_SIZE = 1000
+QUEUE_SIZE = 60
 FEATURES = "features"
 IMPORTANCE = "importance"
 SYNONYM = "synonym"
@@ -56,6 +57,11 @@ DEFAULT_RES = {
 }
 
 
+def join_punct(words):
+    punc = set(punctuation)
+    return "".join(w if set(w) <= punc else " " + w for w in words).lstrip()
+
+
 def data_producer(queue_out, dataset_df):
     for i, cols in tqdm(
             dataset_df[[TEXT, ID, LEMMAS, TAGS, ORTHS, PRED]].iterrows(), total=len(dataset_df)
@@ -69,7 +75,6 @@ def data_saver(queue_in, queue_log, output_file, output_dir, cases_nbr, queues_k
     processed_nbr, start = 0, time()
     item = 1
     test_y, pred_y = [], []
-    spoiled_sents = []
     ch_suc, ch_all, synonyms_nbr = 0, 0, 0
     samples, samples_succ = 0, 0
     count_tokens, sum_tokens = 0, 0
@@ -79,7 +84,7 @@ def data_saver(queue_in, queue_log, output_file, output_dir, cases_nbr, queues_k
         item = queue_in.get()
         if item is not None:
             processed_nbr += 1
-            spoiled, class_test, class_pred, synonym_nbr = item
+            spoiled, class_test, class_pred, synonym_nbr = process(*item)
             test_y.append(class_test)
             pred_y.append(class_pred)
             queue_log.put(f"Processed and saved {processed_nbr} in {time() - start} s")
@@ -92,7 +97,9 @@ def data_saver(queue_in, queue_log, output_file, output_dir, cases_nbr, queues_k
             ch_suc += spoiled[ATTACK_SUMMARY][SUCCEEDED]
             ch_all += spoiled[ATTACK_SUMMARY][ALL]
             synonyms_nbr += synonym_nbr
-            spoiled_sents.append(spoiled)
+            with open(output_file, 'at') as fd:
+                fd.write(pd.DataFrame([spoiled]).to_json(orient="records", lines=True))
+            spoiled  = None
         if processed_nbr == cases_nbr:
             for que_kill in queues_kill:
                 [que_kill.put(None) for _ in range(to_kill_nbr)]
@@ -102,9 +109,6 @@ def data_saver(queue_in, queue_log, output_file, output_dir, cases_nbr, queues_k
             if sum([q.qsize() for q in queues_kill]) == 0 and (time() - end_time) > 3600:
                 for que_kill in queues_kill:
                     [que_kill.put(None) for _ in range(to_kill_nbr)]
-    with open(output_file, 'wt') as fd:
-        fd.write(pd.DataFrame(spoiled_sents).to_json(
-            orient="records", lines=True))
 
     metrics = {
         "confusion_matrix": confusion_matrix(test_y, pred_y).tolist(),
@@ -141,11 +145,17 @@ def classify_queue(queue_in, queue_out, queue_log, dataset_name, cuda_device):
         item = queue_in.get()
         queue_log.put("Classify got from queue")
         if item is not None:
-            sent_id, org_sentence, y_pred, changed_sents, synonyms_nbr = item
-            sentences = [sent[TEXT] for sent in changed_sents]
-            queue_log.put(f"Classifying sentences {len(sentences)}, id {sent_id}")
+            sent_id, org_sentence, y_pred, changed, synonyms_nbr, sent_words = item
+            sentences = []
+            for subst, _ in changed:
+                sent_words_copy = [*sent_words]
+                for idx, word_change in subst.items():
+                    sent_words_copy[idx] = word_change['word']
+                sentences.append(join_punct(sent_words_copy))
+
+            queue_log.put(f"Classifying sentences {synonyms_nbr}, id {sent_id}")
             classified = classify_fun(sentences) if sentences else []
-            queue_out.put((sent_id, org_sentence, changed_sents, y_pred, classified, synonyms_nbr))
+            queue_out.put((sent_id, org_sentence, changed, y_pred, classified, synonyms_nbr, sent_words))
             queue_log.put(f"Classified sentences {sent_id}")
 
 
@@ -214,10 +224,10 @@ def main(dataset_name: str, attack_type: str):
     if "attack_xai" in attack_type:
         importance = load_xai_importance(f"data/explanations/{dataset_name}")
         xai_global, xai_local = importance[0], importance[1]
-    xai_sub = 5
-    max_sub = 8
+    xai_sub = 0.15
+    max_sub = 3
     char_delete_size = 0.4
-    similarity_bound = 0.7
+    similarity_bound = 0.3
 
     params = {
         "attack_textfooler": [lang, SYNONYM],
@@ -232,34 +242,45 @@ def main(dataset_name: str, attack_type: str):
     }[attack_type]
     output_dir = f"data/results/{attack_type}/{dataset_name}/"
     input_file = f"data/classification/{dataset_name}/test.jsonl"
+
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, "test.jsonl")
     dataset_df = pd.read_json(input_file, lines=True)
 
-    m = Manager()
-    queues = [m.Queue(maxsize=QUEUE_SIZE) for _ in range(6)]
 
-    log_que = Thread(target=log_queues, args=(queues[:5],))
+    test_sent_ids = ["Komputery_199721.txt", "Zydzi_976178.txt", "Kotowate_2015873.txt", "Zydzi_1602490.txt",
+                     "Pilka-nozna_2899267.txt", "Optyka_1926807.txt", "Zydzi_929483.txt",
+                     "Niemieccy-wojskowi_2410107.txt"]
+
+    # dataset_df = dataset_df[dataset_df['id'].isin(test_sent_ids)]
+    # dataset_df = dataset_df.reset_index(drop=True)
+
+    dataset_df = dataset_df[:20]
+
+    m = Manager()
+    queues = [m.Queue(maxsize=QUEUE_SIZE) for _ in range(5)]
+
+    log_que = Thread(target=log_queues, args=(queues[:4],))
     log_que.daemon = True
     log_que.start()
-    info_que = Thread(target=log_info_queue, args=(queues[5],))
+    info_que = Thread(target=log_info_queue, args=(queues[4],))
     info_que.daemon = True
     info_que.start()
 
-    processes_nbr = 30
-    sim = Similarity(queues[5], similarity_bound, "distiluse-base-multilingual-cased-v1")
+    processes_nbr = 15
+    sim = Similarity(queues[4], similarity_bound, "distiluse-base-multilingual-cased-v1")
     processes = [Process(target=data_producer, args=(queues[0], dataset_df,))]  # loading data file_in -> 0
 
-    processes.extend([Process(target=spoil_queue, args=(queues[0], queues[1], queues[5], max_sub, attack_type, params))
+    processes.extend([Process(target=spoil_queue, args=(queues[0], queues[1], queues[4], max_sub, attack_type, params))
                      for _ in range(processes_nbr)])  # spoiling 0 -> 1
 
-    processes.extend([Process(target=filter_similarity_queue, args=(queues[1], queues[2], queues[5], sim)),
-                      Process(target=filter_similarity_queue, args=(queues[1], queues[2], queues[5], sim)),  # cosim 1 -> 2
-                      Process(target=classify_queue, args=(queues[2], queues[3], queues[5], dataset_name, "3")),
-                      Process(target=classify_queue, args=(queues[2], queues[3], queues[5], dataset_name, "3")),
+    processes.extend([Process(target=filter_similarity_queue, args=(queues[1], queues[2], queues[4], sim)),
+                      Process(target=filter_similarity_queue, args=(queues[1], queues[2], queues[4], sim)),  # cosim 1 -> 2
+                      Process(target=classify_queue, args=(queues[2], queues[3], queues[4], dataset_name, "3")),
+                      Process(target=classify_queue, args=(queues[2], queues[3], queues[4], dataset_name, "3")),
                       # classify changed 2 -> 3
-                      Process(target=run_queue, args=(queues[3], queues[4], queues[5], process,)),  # process 3 -> 4
-                      Process(target=data_saver, args=(queues[4], queues[5], output_path, output_dir, len(dataset_df), queues, processes_nbr+6)) # saving 4 -> file_out
+                      # Process(target=run_queue, args=(queues[3], queues[4], queues[5], process,)),  # process 3 -> 4
+                      Process(target=data_saver, args=(queues[3], queues[4], output_path, output_dir, len(dataset_df), queues, processes_nbr+6)) # saving 3 -> file_out
                      ])
 
     [p.start() for p in processes]
