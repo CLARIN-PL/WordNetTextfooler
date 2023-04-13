@@ -44,6 +44,24 @@ stages:
         - data/preprocessed/${item}
       outs:
         - data/models/${item}/
+  reduce:
+    foreach:
+      - enron_spam
+      - poleval
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/token_reduce.py
+        --dataset_name ${item}
+        --output_dir data/reduced/${item}
+      deps:
+        - experiments/scripts/token_reduce.py
+        - data/models/${item}/
+        - data/preprocessed/${item}/
+      outs:
+        - data/reduced/${item}
   classify:
     foreach:
       - enron_spam
@@ -59,7 +77,7 @@ stages:
       deps:
         - experiments/scripts/classify.py
         - data/models/${item}/
-        - data/preprocessed/${item}/
+        - data/reduced/${item}/
       outs:
         - data/classification/${item}
   explain:

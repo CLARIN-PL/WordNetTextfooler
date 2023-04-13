@@ -30,7 +30,7 @@ def main(
         dataset_name=dataset_name,
         device="cuda" if torch.cuda.is_available() else "cpu"
     )
-    test = pd.read_json(f"data/preprocessed/{dataset_name}/test.jsonl", lines=True)
+    test = pd.read_json(f"data/reduced/{dataset_name}/test.jsonl", lines=True)
     test_x = test["text"].tolist()
     test_y = test["label"]
     pred_y = classify(test_x)
