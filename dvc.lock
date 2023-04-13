@@ -88,8 +88,8 @@ stages:
       size: 1688836
       nfiles: 3
     - path: experiments/scripts/tag_dataset.py
-      md5: ebadced7a031a31bdaf935d2b22e5e05
-      size: 4632
+      md5: 19015179757440a5639ee263dcabfde3
+      size: 5010
     outs:
     - path: data/preprocessed/poleval/
       md5: b0ea9f0ad1dba6d3b474c0a3cedf866e.dir
@@ -103,8 +103,8 @@ stages:
       size: 53096069
       nfiles: 3
     - path: experiments/scripts/tag_dataset.py
-      md5: ebadced7a031a31bdaf935d2b22e5e05
-      size: 4632
+      md5: 19015179757440a5639ee263dcabfde3
+      size: 5010
     outs:
     - path: data/preprocessed/enron_spam/
       md5: 99d604f84516cee94948054a97ffec5e.dir
@@ -118,8 +118,8 @@ stages:
       size: 29115538
       nfiles: 3
     - path: experiments/scripts/tag_dataset.py
-      md5: ebadced7a031a31bdaf935d2b22e5e05
-      size: 4632
+      md5: 19015179757440a5639ee263dcabfde3
+      size: 5010
     outs:
     - path: data/preprocessed/wiki_pl/
       md5: 066634606f832b6c9d1db95293de7e04.dir
@@ -153,8 +153,8 @@ stages:
       size: 23460358
       nfiles: 3
     - path: experiments/scripts/tag_dataset.py
-      md5: ebadced7a031a31bdaf935d2b22e5e05
-      size: 4632
+      md5: 4282e97ce099dddd615af62c45eb655a
+      size: 5074
     outs:
     - path: data/preprocessed/20_news/
       md5: a3d2da9ac72423e555ae7ed051741b30.dir
@@ -168,13 +168,13 @@ stages:
       md5: 43d68a67ecb8149bd6bf50db9767cb64.dir
       size: 439008808
       nfiles: 6
-    - path: data/preprocessed/20_news/
-      md5: a3d2da9ac72423e555ae7ed051741b30.dir
-      size: 69405970
-      nfiles: 3
+    - path: data/reduced/20_news/
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
     - path: experiments/scripts/classify.py
-      md5: 6fc1a6a0a11ba6cd99a8b6625a96d9f5
-      size: 1181
+      md5: 8c4dc8293bc7d7f8b87b4788cea1b81e
+      size: 1176
     outs:
     - path: data/classification/20_news
       md5: b73611443c4189af91b827c083f37e0b.dir
@@ -684,17 +684,17 @@ stages:
       md5: 8f806cb1b2eb0dd097811d42e4bf9c2d.dir
       size: 501609312
       nfiles: 7
-    - path: data/preprocessed/poleval/
-      md5: b0ea9f0ad1dba6d3b474c0a3cedf866e.dir
-      size: 2812175
-      nfiles: 3
+    - path: data/reduced/poleval/
+      md5: 3586ee4d363638e7627efce92e55e6b0.dir
+      size: 755230
+      nfiles: 1
     - path: experiments/scripts/classify.py
-      md5: 6fc1a6a0a11ba6cd99a8b6625a96d9f5
-      size: 1181
+      md5: 8c4dc8293bc7d7f8b87b4788cea1b81e
+      size: 1176
     outs:
     - path: data/classification/poleval
-      md5: f207458f9365a74672c31b5ffb2a83af.dir
-      size: 787456
+      md5: ad7f82ab04c69cd9e1d18b17e6d94d82.dir
+      size: 775288
       nfiles: 2
   attack_xai_local@poleval:
     cmd: PYTHONPATH=. python experiments/scripts/attack.py --dataset_name poleval
@@ -889,8 +889,8 @@ stages:
       size: 77818549
       nfiles: 3
     - path: experiments/scripts/token_reduce.py
-      md5: aa1fed575c1a14835e55d8fb8bb7f14f
-      size: 4920
+      md5: 091c622fce2349978e61b8f6e4d22f27
+      size: 4945
     outs:
     - path: data/reduced/wiki_pl
       md5: 30359a1d253a3c1cee7affa7ae365ef3.dir
@@ -909,10 +909,85 @@ stages:
       size: 71403809
       nfiles: 3
     - path: experiments/scripts/token_reduce.py
-      md5: aa1fed575c1a14835e55d8fb8bb7f14f
-      size: 4920
+      md5: 091c622fce2349978e61b8f6e4d22f27
+      size: 4945
     outs:
     - path: data/reduced/enron_spam
       md5: ee6f2c141cd68b86e620f022f0ca0b5a.dir
       size: 12933383
       nfiles: 1
+  reduce@poleval:
+    cmd: PYTHONPATH=. python experiments/scripts/token_reduce.py --dataset_name poleval
+      --output_dir data/reduced/poleval
+    deps:
+    - path: data/models/poleval/
+      md5: 8f806cb1b2eb0dd097811d42e4bf9c2d.dir
+      size: 501609312
+      nfiles: 7
+    - path: data/preprocessed/poleval/
+      md5: b0ea9f0ad1dba6d3b474c0a3cedf866e.dir
+      size: 2812175
+      nfiles: 3
+    - path: experiments/scripts/token_reduce.py
+      md5: 091c622fce2349978e61b8f6e4d22f27
+      size: 4945
+    outs:
+    - path: data/reduced/poleval
+      md5: 3586ee4d363638e7627efce92e55e6b0.dir
+      size: 755230
+      nfiles: 1
+  preprocess_dataset@ag_news:
+    cmd: PYTHONPATH=. python experiments/scripts/tag_dataset.py --dataset_name ag_news
+    deps:
+    - path: data/datasets/ag_news/
+      md5: c67ae5399a7bbbe3e25d3864b43c7b54.dir
+      size: 33946011
+      nfiles: 3
+    - path: experiments/scripts/tag_dataset.py
+      md5: 19015179757440a5639ee263dcabfde3
+      size: 5010
+    outs:
+    - path: data/preprocessed/ag_news/
+      md5: f87f6ac5c43e28205abec35a3f18f0e7.dir
+      size: 49924819
+      nfiles: 3
+  reduce@ag_news:
+    cmd: PYTHONPATH=. python experiments/scripts/token_reduce.py --dataset_name ag_news
+      --output_dir data/reduced/ag_news
+    deps:
+    - path: data/models/ag_news/
+      md5: af9183a3115fd5f07ec2ba8e9086200b.dir
+      size: 438958577
+      nfiles: 6
+    - path: data/preprocessed/ag_news/
+      md5: f87f6ac5c43e28205abec35a3f18f0e7.dir
+      size: 49924819
+      nfiles: 3
+    - path: experiments/scripts/token_reduce.py
+      md5: 091c622fce2349978e61b8f6e4d22f27
+      size: 4945
+    outs:
+    - path: data/reduced/ag_news
+      md5: 5ab65584e3b005a19cb527fd69dfaf2c.dir
+      size: 11648332
+      nfiles: 1
+  classify@ag_news:
+    cmd: PYTHONPATH=. python experiments/scripts/classify.py --dataset_name ag_news
+      --output_dir data/classification/ag_news
+    deps:
+    - path: data/models/ag_news/
+      md5: af9183a3115fd5f07ec2ba8e9086200b.dir
+      size: 438958577
+      nfiles: 6
+    - path: data/reduced/ag_news/
+      md5: 5ab65584e3b005a19cb527fd69dfaf2c.dir
+      size: 11648332
+      nfiles: 1
+    - path: experiments/scripts/classify.py
+      md5: 8c4dc8293bc7d7f8b87b4788cea1b81e
+      size: 1176
+    outs:
+    - path: data/classification/ag_news
+      md5: d9cabd3c3554172bf43b296079eec947.dir
+      size: 11806224
+      nfiles: 2

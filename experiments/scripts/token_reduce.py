@@ -116,6 +116,7 @@ def main(
         "poleval": "pl",
         "20_news": "en",
         "wiki_pl": "pl",
+        "ag_news": "en",
     }[dataset_name]
     output_dir.mkdir(parents=True, exist_ok=True)
     model, tokenizer = get_model_and_tokenizer(

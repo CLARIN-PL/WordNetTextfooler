@@ -219,6 +219,7 @@ def main(dataset_name: str, attack_type: str):
         "poleval": "pl",
         "20_news": "en",
         "wiki_pl": "pl",
+        "ag_news": "en",
     }[dataset_name]
     xai_global, xai_local = {}, {}
     if "attack_xai" in attack_type:
