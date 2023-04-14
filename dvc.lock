@@ -940,16 +940,16 @@ stages:
     cmd: PYTHONPATH=. python experiments/scripts/tag_dataset.py --dataset_name ag_news
     deps:
     - path: data/datasets/ag_news/
-      md5: c67ae5399a7bbbe3e25d3864b43c7b54.dir
-      size: 33946011
+      md5: 98d7192236c2f868e52f772e9a3aa01b.dir
+      size: 34020031
       nfiles: 3
     - path: experiments/scripts/tag_dataset.py
       md5: 19015179757440a5639ee263dcabfde3
       size: 5010
     outs:
     - path: data/preprocessed/ag_news/
-      md5: f87f6ac5c43e28205abec35a3f18f0e7.dir
-      size: 49924819
+      md5: 225096ec90dfb5085b6a8e3835681155.dir
+      size: 49998839
       nfiles: 3
   reduce@ag_news:
     cmd: PYTHONPATH=. python experiments/scripts/token_reduce.py --dataset_name ag_news
@@ -960,16 +960,16 @@ stages:
       size: 438958577
       nfiles: 6
     - path: data/preprocessed/ag_news/
-      md5: f87f6ac5c43e28205abec35a3f18f0e7.dir
-      size: 49924819
+      md5: 225096ec90dfb5085b6a8e3835681155.dir
+      size: 49998839
       nfiles: 3
     - path: experiments/scripts/token_reduce.py
       md5: 091c622fce2349978e61b8f6e4d22f27
       size: 4945
     outs:
     - path: data/reduced/ag_news
-      md5: 5ab65584e3b005a19cb527fd69dfaf2c.dir
-      size: 11648332
+      md5: adac9c05622da5a0895de488a2dc80fa.dir
+      size: 11715622
       nfiles: 1
   classify@ag_news:
     cmd: PYTHONPATH=. python experiments/scripts/classify.py --dataset_name ag_news
@@ -991,3 +991,23 @@ stages:
       md5: d9cabd3c3554172bf43b296079eec947.dir
       size: 11806224
       nfiles: 2
+  explain@ag_news:
+    cmd: PYTHONPATH=. python experiments/scripts/explain.py --dataset_name ag_news
+      --output_dir data/explanations/ag_news
+    deps:
+    - path: data/models/ag_news
+      md5: af9183a3115fd5f07ec2ba8e9086200b.dir
+      size: 438958577
+      nfiles: 6
+    - path: data/preprocessed/ag_news
+      md5: 225096ec90dfb5085b6a8e3835681155.dir
+      size: 49998839
+      nfiles: 3
+    - path: experiments/scripts/explain.py
+      md5: 2c1eca09f7cbdc5d93278b2cd27b126c
+      size: 4717
+    outs:
+    - path: data/explanations/ag_news/
+      md5: ae37f6468f0b44e40cf421e2544d2646.dir
+      size: 54861964
+      nfiles: 30405
