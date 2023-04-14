@@ -103,12 +103,14 @@ def main(
     os.makedirs(output_dir / "global", exist_ok=True)
     for class_id, class_name in model.config.id2label.items():
         importance_df = get_importance(shap_values[:, :, class_id].mean(0))
+        class_name = class_name.replace("/", "_")
         importance_df.to_json(
             output_dir / "global" / f"{class_name}__importance.json",
         )
 
     # LOCAL IMPORTANCE
     for class_id, class_name in model.config.id2label.items():
+        class_name = class_name.replace("/", "_")
         sub_dir = output_dir / "local" / "adversarial" /class_name
         os.makedirs(sub_dir, exist_ok=True)
         for shap_id, text_id in enumerate(test["id"]):

@@ -17,7 +17,7 @@ stages:
     foreach:
       - enron_spam
       - poleval
-      - 20_news
+      - ag_news
       - wiki_pl
     do:
        wdir: .
@@ -44,11 +44,29 @@ stages:
         - data/preprocessed/${item}
       outs:
         - data/models/${item}/
+  reduce:
+    foreach:
+      - enron_spam
+      - poleval
+      - ag_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/token_reduce.py
+        --dataset_name ${item}
+        --output_dir data/reduced/${item}
+      deps:
+        - experiments/scripts/token_reduce.py
+        - data/models/${item}/
+        - data/preprocessed/${item}/
+      outs:
+        - data/reduced/${item}
   classify:
     foreach:
       - enron_spam
       - poleval
-      - 20_news
+      - ag_news
       - wiki_pl
     do:
       wdir: .
@@ -59,14 +77,14 @@ stages:
       deps:
         - experiments/scripts/classify.py
         - data/models/${item}/
-        - data/preprocessed/${item}/
+        - data/reduced/${item}/
       outs:
         - data/classification/${item}
   explain:
     foreach:
       - enron_spam
       - poleval
-      - 20_news
+      - ag_news
       - wiki_pl
     do:
       wdir: .
@@ -199,4 +217,37 @@ stages:
         - data/classification/${item}
       outs:
         - data/results/attack_basic/${item}/
-
+  attack_xai_char_discard:
+    foreach:
+      - enron_spam
+      - poleval
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_xai_char_discard
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_xai_char_discard/${item}/
+  attack_xai_char_discard_local:
+    foreach:
+      - enron_spam
+      - poleval
+      - 20_news
+      - wiki_pl
+    do:
+      wdir: .
+      cmd: >-
+        PYTHONPATH=. python experiments/scripts/attack.py
+        --dataset_name ${item} --attack_type attack_xai_char_discard_local
+      deps:
+        - experiments/scripts/attack.py
+        - data/models/${item}
+        - data/classification/${item}
+      outs:
+        - data/results/attack_xai_char_discard_local/${item}/   
